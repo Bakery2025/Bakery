@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Track Your Order - Elicious Bake's</title>
+        <link rel="stylesheet" href="/styles.css" />
+    </head>
+    <body>
+        <header>
+            <div class="logo-title">
+                <img
+                    src="images/bakery.jpg"
+                    alt="Elicious Bake's Logo"
+                    class="logo"
+                />
+                <h1>Elicious Bake's</h1>
+            </div>
+
+            <h2 class="custom-order-title">Track Order</h2>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/menu">Menu</a></li>
+                    <li><a href="/custom-order">Custom Order</a></li>
+                    <li><a href="/track-order">Track Order</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="form-container">
+            <h2>Track Your Order 📦</h2>
+            <p>
+                Enter your 10-character Order ID to check the status of your
+                order.
+            </p>
+
+            <form id="trackOrderForm">
+                <label for="orderId">Order ID:</label>
+                <input
+                    type="text"
+                    id="orderId"
+                    minlength="10"
+                    maxlength="10"
+                    required
+                />
+
+                <button type="submit" class="order-btn">Track Order</button>
+            </form>
+
+            <div id="orderDetails" style="display: none">
+                <h3>Order Details</h3>
+                <p>
+                    <strong>Order ID:</strong> <span id="orderIdDisplay"></span>
+                </p>
+                <p><strong>Name:</strong> <span id="name"></span></p>
+                <p><strong>Phone:</strong> <span id="phone"></span></p>
+                <p><strong>Address:</strong> <span id="address"></span></p>
+                <p><strong>Items:</strong> <span id="items"></span></p>
+                <p>
+                    <strong>Special Request:</strong>
+                    <span id="specialRequest"></span>
+                </p>
+
+                <button id="editOrder" class="edit-btn" style="display: none">
+                    Edit Order
+                </button>
+                <button
+                    id="cancelOrder"
+                    class="cancel-btn"
+                    style="display: none"
+                >
+                    Cancel Order
+                </button>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2025 Elicious Bake's. All rights reserved.</p>
+        </footer>
+
+        <script>
+            document
+                .getElementById("trackOrderForm")
+                .addEventListener("submit", async function (event) {
+                    event.preventDefault();
+                    const orderId = document
+                        .getElementById("orderId")
+                        .value.trim();
+
+                    if (!orderId) {
+                        alert("Please enter a valid Order ID.");
+                        return;
+                    }
+
+                    const response = await fetch(
+                        `/track-order-details?id=${orderId}`,
+                    );
+                    const data = await response.json();
+
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        document.getElementById("orderDetails").style.display =
+                            "block";
+
+                        // Function to update field only if it has a value
+                        function updateField(id, value) {
+                            const field = document.getElementById(id);
+                            if (value) {
+                                field.parentElement.style.display = "block"; // Show field if it has data
+                                field.textContent = value;
+                            } else {
+                                field.parentElement.style.display = "none"; // Hide field if empty
+                            }
+                        }
+
+                        // Update all fields dynamically
+                        updateField("orderIdDisplay", data.orderId);
+                        updateField("name", data.name);
+                        updateField("phone", data.phone);
+                        updateField("address", data.address);
+                        updateField(
+                            "items",
+                            data.items ? data.items.join(", ") : null,
+                        );
+                        updateField(
+                            "specialRequest",
+                            data.specialRequest || "None",
+                        );
+                        updateField(
+                            "totalPrice",
+                            data.totalPrice ? `₹${data.totalPrice}` : null,
+                        );
+
+                        // Show buttons
+                        document.getElementById("editOrder").style.display =
+                            "inline-block";
+                        document.getElementById("cancelOrder").style.display =
+                            "inline-block";
+
+                        document.getElementById("editOrder").onclick =
+                            function () {
+                                window.location.href = `/edit-order?id=${data.orderId}`;
+                            };
+
+                        document.getElementById("cancelOrder").onclick =
+                            async function () {
+                                if (
+                                    confirm(
+                                        "Are you sure you want to cancel this order?",
+                                    )
+                                ) {
+                                    const cancelResponse = await fetch(
+                                        "/cancel-order",
+                                        {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type":
+                                                    "application/json",
+                                            },
+                                            body: JSON.stringify({
+                                                orderId: data.orderId,
+                                            }),
+                                        },
+                                    );
+
+                                    const result = await cancelResponse.text();
+                                    alert(result);
+                                    window.location.reload();
+                                }
+                            };
+                    }
+                });
+        </script>
+    </body>
+</html>

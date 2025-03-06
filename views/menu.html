@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Menu - Elicious Bake's</title>
+        <link rel="stylesheet" href="/styles.css" />
+    </head>
+    <body>
+        <header>
+            <div class="logo-title">
+                <img
+                    src="images/bakery.jpg"
+                    alt="Elicious Bake's Logo"
+                    class="logo"
+                />
+                <h1>Elicious Bake's</h1>
+            </div>
+            <h2 class="custom-order-title">Our Menu</h2>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/menu">Menu</a></li>
+                    <li><a href="/custom-order">Custom Order</a></li>
+                    <li><a href="/track-order">Track Order</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="menu-container">
+            <h2>Explore Our Delights</h2>
+            <p>
+                Freshly baked with love! Choose from our range of delicious
+                treats.
+            </p>
+            <div id="menu-wrapper">
+                <div id="menu-list"></div>
+            </div>
+            <div style="height: 10px"></div>
+            <button onclick="checkoutOrder()" class="checkout-btn">
+                Checkout
+            </button>
+        </section>
+
+        <script>
+            const menuItems = [
+                // Appetizers
+                {
+                    category: "Appetizers",
+                    name: "Paneer Grilled Sandwich",
+                    price: 110,
+                },
+                { category: "Appetizers", name: "Grilled Sandwich", price: 80 },
+                { category: "Appetizers", name: "Garlic Bread", price: 150 },
+                { category: "Appetizers", name: "Zingy Parcel", price: 60 },
+                {
+                    category: "Appetizers",
+                    name: "Stuffed Garlic Bread",
+                    price: 180,
+                },
+                {
+                    category: "Appetizers",
+                    name: "Garlic Cheese Toast",
+                    price: 100,
+                },
+
+                // Hamburgers
+                {
+                    category: "Hamburgers",
+                    name: "Aalu Tikki Burger",
+                    price: 80,
+                },
+                { category: "Hamburgers", name: "Grilled Burger", price: 100 },
+                { category: "Hamburgers", name: "Veggie Burger", price: 80 },
+                { category: "Hamburgers", name: "Cheese Burger", price: 150 },
+
+                // Pizzas
+                {
+                    category: "Pizzas",
+                    name: "Cheese & Mushroom Pizza",
+                    price: 150,
+                },
+                { category: "Pizzas", name: "Cheese & Corn Pizza", price: 100 },
+                { category: "Pizzas", name: "Farm Fresh Pizza", price: 250 },
+                { category: "Pizzas", name: "Delight Pizza", price: 220 },
+                { category: "Pizzas", name: "Veg. Maxicana Pizza", price: 240 },
+                {
+                    category: "Pizzas",
+                    name: "Capsicum Onion Pizza",
+                    price: 110,
+                },
+                { category: "Pizzas", name: "Mix Veg. Pizza", price: 270 },
+
+                // Cakes
+                { category: "Cakes", name: "Pineapple Cake", price: 600 },
+                { category: "Cakes", name: "Butterscotch Cake", price: 800 },
+                { category: "Cakes", name: "Blueberry Cake", price: 600 },
+                { category: "Cakes", name: "Chocolate Cake", price: 800 },
+                { category: "Cakes", name: "Rasmalai Cake", price: 800 },
+                { category: "Cakes", name: "Mix Fruit Cake", price: 600 },
+                { category: "Cakes", name: "Strawberry Cake", price: 700 },
+                { category: "Cakes", name: "Biscoff Cake", price: 800 },
+
+                // Donuts
+                { category: "Donuts", name: "Nutella Donuts", price: 80 },
+                {
+                    category: "Donuts",
+                    name: "White Chocolate Donuts",
+                    price: 70,
+                },
+                { category: "Donuts", name: "Chocolate Donuts", price: 70 },
+                { category: "Donuts", name: "Bomboloni", price: 90 },
+                { category: "Donuts", name: "Jar Cakes", price: 110 },
+
+                // Hampers
+                {
+                    category: "Hampers",
+                    name: "Chocolate Bento Cake + 4 Cupcakes",
+                    price: 800,
+                },
+                {
+                    category: "Hampers",
+                    name: "Vanilla Bento Cake + 6 Cupcakes",
+                    price: 700,
+                },
+                {
+                    category: "Hampers",
+                    name: "Chocochip Dry Cake + Walnut Cake",
+                    price: 500,
+                },
+            ];
+
+            function renderMenu() {
+                const menuContainer = document.getElementById("menu-list");
+                let html = "";
+
+                // Get unique categories
+                const categories = [
+                    ...new Set(menuItems.map((item) => item.category)),
+                ];
+
+                categories.forEach((category) => {
+                    html += `<h2>${category}</h2><ul>`;
+                    menuItems
+                        .filter((item) => item.category === category)
+                        .forEach((item) => {
+                            html += `
+                <li>
+                    <label>
+                        <input type="checkbox" class="menu-checkbox" value="${item.name}" data-price="${item.price}">
+                        ${item.name} - ₹${item.price}
+                    </label>
+                </li>`;
+                        });
+                    html += `</ul>`;
+                });
+
+                menuContainer.innerHTML = html;
+            }
+
+            document.querySelectorAll("#menu-list li").forEach((li) => {
+                li.addEventListener("click", function (event) {
+                    const checkbox = this.querySelector(".menu-checkbox");
+                    if (event.target !== checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                    }
+                });
+            });
+
+            function toggleCategory(element) {
+                const itemsList = element.nextElementSibling;
+                itemsList.style.display =
+                    itemsList.style.display === "none" ? "block" : "none";
+            }
+
+            // Checkout function
+            function checkoutOrder() {
+                const selectedItems = [];
+                let total = 0;
+
+                document
+                    .querySelectorAll(".menu-checkbox:checked")
+                    .forEach((checkbox) => {
+                        const itemName = checkbox.value;
+                        const itemPrice = parseInt(
+                            checkbox.getAttribute("data-price"),
+                        );
+                        selectedItems.push({
+                            name: itemName,
+                            price: itemPrice,
+                        });
+                        total += itemPrice;
+                    });
+
+                if (selectedItems.length === 0) {
+                    alert("Please select at least one item before checkout!");
+                } else {
+                    localStorage.setItem(
+                        "selectedItems",
+                        JSON.stringify(selectedItems),
+                    );
+                    localStorage.setItem("totalPrice", total);
+                    window.location.href = "/checkout";
+                }
+            }
+
+            // Load menu when page loads
+            document.addEventListener("DOMContentLoaded", renderMenu);
+        </script>
+
+        <footer>
+            <p>&copy; 2025 Elicious Bake's. All rights reserved.</p>
+        </footer>
+    </body>
+</html>

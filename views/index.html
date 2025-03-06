@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Home - Elicious Bake's</title>
+        <link rel="stylesheet" href="/styles.css" />
+    </head>
+    <body>
+        <header>
+            <div class="logo-title">
+                <img
+                    src="images/bakery.jpg"
+                    alt="Elicious Bake's"
+                    class="logo"
+                />
+                <h1>Elicious Bake's</h1>
+            </div>
+            <h2 class="custom-order-title">Home Page</h2>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/menu">Menu</a></li>
+                    <li><a href="/custom-order">Custom Order</a></li>
+                    <li><a href="/track-order">Track Order</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Hero Section with Slideshow Background -->
+        <section class="hero">
+            <div class="hero-overlay">
+                <h2>Welcome to Elicious Bake's!</h2>
+                <p>
+                    Baked with love, just for you—cakes, donuts, pizzas too! Order now and take a bite, every treat is pure delight!
+                </p>
+                <a href="/menu" class="btn">View Menu</a>
+            </div>
+        </section>
+
+        <script>
+            // Slide Background Images
+            const slides = [
+                "images/slide1.jpg",
+            ];
+
+            let slideIndex = 0;
+
+            function changeBackground() {
+                document.querySelector(".hero").style.backgroundImage =
+                    `url(${slides[slideIndex]})`;
+                slideIndex = (slideIndex + 1) % slides.length;
+            }
+
+            // Change background every 5 seconds
+            setInterval(changeBackground, 5000);
+
+            // Initial background load
+            document.addEventListener("DOMContentLoaded", changeBackground);
+        </script>
+
+        <footer>
+            <p>&copy; 2025 Elicious Bake's. All rights reserved.</p>
+        </footer>
+    </body>
+</html>

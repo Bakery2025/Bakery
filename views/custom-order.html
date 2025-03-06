@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Custom Order - Elicious Bake's</title>
+        <link rel="stylesheet" href="/styles.css" />
+    </head>
+    <body>
+        <header>
+            <div class="logo-title">
+                <img
+                    src="images/bakery.jpg"
+                    alt="Elicious Bake's Logo"
+                    class="logo"
+                />
+                <h1>Elicious Bake's</h1>
+            </div>
+
+            <h2 class="custom-order-title">Custom Order</h2>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/menu">Menu</a></li>
+                    <li><a href="/custom-order">Custom Order</a></li>
+                    <li><a href="/track-order">Track Order</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="form-container">
+            <h2>Place Your Custom Order</h2>
+            <p>Fill in your details and let us bake your perfect treat!</p>
+            <form action="/submit-order" method="POST">
+                <label for="name">Full Name:</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="[first name] [second/surname]"
+                    maxlength="50"
+                    required
+                />
+
+                <label for="phone">Phone Number:</label>
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    maxlength="10"
+                    required
+                />
+
+                <label for="email"
+                    >Email Address (optional, for order copy):</label
+                >
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="yourmail@gmail.com"
+                    maxlength="75"
+                />
+
+                <label for="address">Address:</label>
+                <textarea
+                    id="address"
+                    name="address"
+                    maxlength="200"
+                    required
+                ></textarea>
+
+                <label for="items">Order Details:</label>
+                <textarea
+                    id="items"
+                    name="items"
+                    maxlength="200"
+                    placeholder="2-tier velvet cake, 500g chocolate cookies..."
+                    required
+                ></textarea>
+
+                <label for="specialRequest">Special Requests:</label>
+                <textarea
+                    id="specialRequest"
+                    maxlength="200"
+                    placeholder="Red gift wrap, custom messages, frosting color..."
+                    name="specialRequest"
+                ></textarea>
+
+                <label for="allergies">Allergies/Ingredient free:</label>
+                <input
+                    type="text"
+                    id="allergies"
+                    name="allergies"
+                    maxlength="100"
+                    placeholder="Please let us know if you have any dietary allergies!"
+                />
+
+                <button type="submit" class="order-btn">Place Order</button>
+            </form>
+        </section>
+
+        <footer>
+            <p>&copy; 2025 Elicious Bake's. All rights reserved.</p>
+        </footer>
+    </body>
+</html>

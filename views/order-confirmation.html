@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Elicious Bake's</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <h1>🎉 Order Placed Successfully! 🎉</h1>
+    </header>
+    
+    <section class="confirmation">
+        <p>Thank you for your order! Your delicious treats will be prepared soon. 🍰</p>
+        <p><strong>Order ID:</strong>  <span id="order-id"></span></p>
+        <p>Use your Order ID to edit or cancel your order.</p>
+       <p><b>Please save this Order ID for future references.</b></p>
+        <a href="/">Return to Home</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Elicious Bake's. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById('order-id').textContent = new URLSearchParams(window.location.search).get('id') || 'N/A';
+    </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Checkout - Elicious Bake's</title>
+        <link rel="stylesheet" href="/styles.css" />
+    </head>
+
+    <body>
+        <header>
+            <div class="logo-title">
+                <img
+                    src="images/bakery.jpg"
+                    alt="Elicious Bake's Logo"
+                    class="logo"
+                />
+                <h1>Elicious Bake's</h1>
+            </div>
+
+            <h2 class="custom-order-title">Checkout</h2>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/menu">Menu</a></li>
+                    <li><a href="/custom-order">Custom Order</a></li>
+                    <li><a href="/track-order">Track Order</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="form-container">
+            <h2>Your Order</h2>
+            <table id="order-summary">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Price per item</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <h3>Total Price: ₹<span id="total-price">0</span></h3>
+
+            <h2>Customer Details</h2>
+            <form id="order-form" action="/submit-checkout" method="POST">
+                <label for="name">Full Name:</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="[first name] [second/surname]"
+                    maxlength="50"
+                    required
+                />
+
+                <label for="phone">Phone Number:</label>
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    maxlength="10"
+                    required
+                />
+
+                <label for="email"
+                    >Email Address (optional, for order copy):</label
+                >
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="yourmail@gmail.com"
+                    maxlength="75"
+                />
+
+                <label for="address">Address:</label>
+                <textarea
+                    id="address"
+                    name="address"
+                    maxlength="200"
+                    required
+                ></textarea>
+
+                <label for="specialRequest">Special Requests:</label>
+                <textarea
+                    id="specialRequest"
+                    placeholder="Red gift wrap, custom messages, frosting color..."
+                    name="specialRequest"
+                    maxlength="200"
+                ></textarea>
+
+                <label for="allergies">Allergies/Ingredient free:</label>
+                <input
+                    type="text"
+                    id="allergies"
+                    name="allergies"
+                    maxlength="100"
+                    placeholder="Please let us know if you have any dietary allergies!"
+                />
+
+                <button type="submit" class="order-btn">Place Order</button>
+            </form>
+        </section>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const selectedItems =
+                    JSON.parse(localStorage.getItem("selectedItems")) || [];
+                let totalPrice =
+                    parseInt(localStorage.getItem("totalPrice")) || 0;
+
+                const orderSummary = document.querySelector(
+                    "#order-summary tbody",
+                );
+                const totalPriceElement =
+                    document.getElementById("total-price");
+
+                function updateTotal() {
+                    let newTotal = selectedItems.reduce(
+                        (sum, item) => sum + item.price,
+                        0,
+                    );
+                    totalPrice = newTotal;
+                    totalPriceElement.textContent = totalPrice;
+                    localStorage.setItem("totalPrice", totalPrice);
+                }
+
+                function updateItemPrice(index, quantity) {
+                    const item = selectedItems[index];
+
+                    // Ensure basePrice is stored correctly and persist across refreshes
+                    if (!item.basePrice) {
+                        item.basePrice = item.originalPrice || item.price; // Store the original price only once
+                    }
+
+                    item.quantity = quantity;
+                    item.price = item.basePrice * quantity; // Calculate price using the stored basePrice
+
+                    document.getElementById(`item-total-${index}`).textContent =
+                        `₹${item.price}`;
+
+                    localStorage.setItem(
+                        "selectedItems",
+                        JSON.stringify(selectedItems),
+                    );
+                    updateTotal();
+                }
+
+                selectedItems.forEach((item, index) => {
+                    if (!item.basePrice) {
+                        item.basePrice = item.originalPrice || item.price; // Restore correct base price
+                    }
+                    const row = document.createElement("tr");
+
+                    row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>
+                        <select class="quantity" data-index="${index}">
+                            ${Array.from(
+                                { length: 10 },
+                                (_, i) =>
+                                    `<option value="${i + 1}" ${item.quantity === i + 1 ? "selected" : ""}>${i + 1}</option>`,
+                            ).join("")}
+                        </select>
+                    </td>
+                    <td>₹${item.basePrice}</td> <!-- Ensure base price is displayed correctly -->
+                    <td id="item-total-${index}">₹${item.price}</td>
+                `;
+
+                    orderSummary.appendChild(row);
+                });
+
+                document.querySelectorAll(".quantity").forEach((select) => {
+                    select.addEventListener("change", function () {
+                        const index = this.getAttribute("data-index");
+                        updateItemPrice(index, parseInt(this.value));
+                    });
+                });
+
+                updateTotal();
+
+                document
+                    .getElementById("order-form")
+                    .addEventListener("submit", function (event) {
+                        event.preventDefault();
+
+                        const orderData = {
+                            name: document.getElementById("name").value,
+                            phone: document.getElementById("phone").value,
+                            email: document.getElementById("email").value,
+                            address: document.getElementById("address").value,
+                            specialRequest:
+                                document.getElementById("specialRequest").value,
+                            allergies:
+                                document.getElementById("allergies").value,
+                            items: selectedItems,
+                            total: totalPrice,
+                        };
+                        console.log(
+                            "🛒 Selected Items from localStorage:",
+                            selectedItems,
+                        );
+
+                        console.log("Order Placed:", orderData);
+                        localStorage.clear();
+                        fetch("/submit-checkout", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(orderData),
+                        })
+                            .then((response) => response.json()) // Parse JSON response
+                            .then((data) => {
+                                if (data.success) {
+                                    localStorage.clear();
+                                    window.location.href = `/order-confirmation?id=${data.orderId}`; // Manually redirect
+                                } else {
+                                    alert(
+                                        "❌ Error placing order. Please try again.",
+                                    );
+                                }
+                            })
+                            .catch((error) =>
+                                console.error("Error placing order:", error),
+                            );
+                    });
+            });
+        </script>
+    </body>
+</html>
