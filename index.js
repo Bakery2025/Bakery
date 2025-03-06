@@ -16,6 +16,11 @@ mongoose
     .then(() => console.log("Connected to MongoDB"))
     .catch((err) => console.log("MongoDB Connection Error:", err));
 
+app.get("/api/ping", (req, res) => {
+  res.status(200).send("Server is alive!");
+});
+
+
 // Order Schema
 const orderSchema = new mongoose.Schema({
     orderId: String,
