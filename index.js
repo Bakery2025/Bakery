@@ -23,7 +23,11 @@ const orderSchema = new mongoose.Schema({
     total: String,
     specialRequest: String,
     allergies: String,
-    orderType: String
+    orderType: String,
+    paymentMethod: String,
+    orderStatus: { type: String, default: "Pending" }, 
+    orderTimestamp: { type: String, default: () => new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }) },
+    deliveryTimestamp: { type: Date, default: null }
 });
 
 const Order = mongoose.model('Order', orderSchema);
@@ -77,7 +81,19 @@ app.post('/submit-checkout', async (req, res) => {
     const { name, phone, address, email, items, total, specialRequest, allergies } = req.body;
     const orderId = crypto.randomBytes(5).toString('hex'); // Generates a random 10-character order ID
     var orderType = 'Standand-Order'
-    const newOrder = new Order({ orderId, name, phone, email, address, items, total, specialRequest, allergies, orderType });
+        const newOrder = new Order({
+        orderId,
+        name,
+        phone,
+        email,
+        address,
+        items,
+        total,
+        specialRequest,
+        allergies,
+        orderType: "Regular",
+        paymentMethod: "Cash",
+    });
     await newOrder.save();
 
     // Nodemailer configuration to send the email
@@ -350,7 +366,18 @@ app.post('/submit-order', async (req, res) => {
     var orderType = 'Custom-Order'
     const orderId = crypto.randomBytes(5).toString('hex'); // Generates a random 10-character order ID
 
-    const newOrder = new Order({ orderId, name, phone, email, address, items, specialRequest, allergies, orderType });
+     const newOrder = new Order({
+        orderId,
+        name,
+        phone,
+        email,
+        address,
+        items,
+        specialRequest,
+        allergies,
+        orderType: "Custom",
+        paymentMethod: "Cash",
+    });
     await newOrder.save();
 
     // Nodemailer configuration to send the email
