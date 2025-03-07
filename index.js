@@ -109,7 +109,7 @@ app.post('/submit-checkout', async (req, res) => {
     });
 
     const mailOptionsForOwner = {
-        from: '"Elicious Bake\'s" <eliciousbakes00@gmail.com>',  // Sender address
+        from: '"Elicious Bakes" <eliciousbakes00@gmail.com>',  // Sender address
         to: 'eliciousbakes00@gmail.com',    // Receiver address (can be the bakery owner or anyone else)
         subject: `New Order - ${newOrder.orderId}`,
         html: `
@@ -224,7 +224,7 @@ app.post('/submit-checkout', async (req, res) => {
 
     if (email) {
         const mailOptionsForUser = {
-            from: '"Elicious Bake\'s" <eliciousbakes00@gmail.com',
+            from: '"Elicious Bakes" <eliciousbakes00@gmail.com',
             to: email,  // User’s email
             subject: `Order Confirmation - ${newOrder.orderId}`,
             html: `
@@ -393,7 +393,7 @@ app.post('/submit-order', async (req, res) => {
     });
 
     const mailOptionsForOwner = {
-        from: '"Elicious Bake\'s" <eliciousbakes00@gmail.com>',  // Sender address
+        from: '"Elicious Bakes" <eliciousbakes00@gmail.com>',  // Sender address
         to: 'eliciousbakes00@gmail.com',    // Receiver address (can be the bakery owner or anyone else)
         subject: `New Order - ${newOrder.orderId}`,
         html: `
@@ -504,7 +504,7 @@ app.post('/submit-order', async (req, res) => {
 
     if (email) {
         const mailOptionsForUser = {
-            from: '"Elicious Bake\'s" <eliciousbakes00@gmail.com>',
+            from: '"Elicious Bakes" <eliciousbakes00@gmail.com>',
             to: email,  // User’s email
             subject: `Order Confirmation - ${newOrder.orderId}`,
             html: `
