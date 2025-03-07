@@ -189,7 +189,7 @@ app.post('/submit-checkout', async (req, res) => {
                         </table>
                     </div>
                     <div class="footer">
-                        <p>Please start preparing for the order 😊.</p>
+                        <p>Please start preparing for the order 😊</p>
                     </div>
                 </div>
             </body>
@@ -323,7 +323,7 @@ app.post('/submit-checkout', async (req, res) => {
                             </table>
                         </div>
                         <div class="footer">
-                            <p>We will notify you once the order is ready for pick up or delivery 😊.</p>
+                            <p>We will notify you once the order is ready for pick up or delivery 😊</p>
                         </div>
                     </div>
                 </body>
@@ -458,7 +458,7 @@ app.post('/submit-order', async (req, res) => {
                         </table>
                     </div>
                     <div class="footer">
-                        <p>Please start preparing for the order 😊.</p>
+                        <p>Please start preparing for the order 😊</p>
                     </div>
                 </div>
             </body>
@@ -571,7 +571,7 @@ app.post('/submit-order', async (req, res) => {
                             </table>
                         </div>
                         <div class="footer">
-                            <p>We will notify you once the order is ready for pick up or delivery 😊.</p>
+                            <p>We will notify you once the order is ready for pick up or delivery 😊</p>
                         </div>
                     </div>
                 </body>
