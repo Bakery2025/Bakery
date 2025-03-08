@@ -54,11 +54,11 @@ app.get('/custom-order', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'custom-order.html'));
 });
 
-app.get('/track-order', async (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'track-order.html'));
+app.get("/track-order", async (req, res) => {
+    res.sendFile(path.join(__dirname, "views", "track-order.html"));
 });
 
-app.get('/track-order-details', async (req, res) => {
+app.get("/track-order-details", async (req, res) => {
     const { id } = req.query;
 
     const order = await Order.findOne({ orderId: id });
@@ -77,6 +77,9 @@ app.get('/checkout', async (req, res) => {
 app.post('/submit-checkout', async (req, res) => {
     console.log("Received Checkout Data:", req.body);
 
+app.get("/edit-order", (req, res) => {
+    res.sendFile(path.join(__dirname, "views", "edit-order.html"));
+});
 
     const { name, phone, address, email, items, total, specialRequest, allergies } = req.body;
     const orderId = crypto.randomBytes(5).toString('hex'); // Generates a random 10-character order ID
@@ -619,15 +622,43 @@ app.post('/submit-order', async (req, res) => {
     res.redirect(`/order-confirmation?id=${orderId}`);
 });
 
+app.get("/api/get-order", async (req, res) => {
+    const orderId = req.query.id; // Get Order ID from query
 
-// Edit Order Route
-app.post('/edit-order', async (req, res) => {
-    const { orderId, name, phone, email, address, items, specialRequest } = req.body;
+    if (!orderId) {
+        return res.status(400).json({ error: "Order ID is required." });
+    }
 
-    const updatedOrder = await Order.findOneAndUpdate({ orderId }, { name, phone, address, items, specialRequest }, { new: true });
+    try {
+        console.log("Fetching order:", orderId);
+        const order = await Order.findOne({ orderId });
+
+        if (!order) {
+            console.log("Order not found:", orderId);
+            return res.status(404).json({ error: "Order not found." });
+        }
+
+        console.log("Order found:", order);
+        res.json(order); // ✅ Return JSON properly
+
+    } catch (err) {
+        console.error("Error fetching order:", err);
+        res.status(500).json({ error: "Internal Server Error." });
+    }
+});
+
+// Route to handle order updates
+app.post("/edit-order", async (req, res) => {
+    const { orderId, name, phone, email, address, specialRequest, allergies } = req.body;
+
+    const updatedOrder = await Order.findOneAndUpdate(
+        { orderId },
+        { name, phone, email, address, specialRequest, allergies },
+        { new: true }
+    );
 
     if (updatedOrder) {
-        res.send("Order updated successfully!");
+         res.sendFile(path.join(__dirname, "views", "update-success.html"));
     } else {
         res.send("Order ID not found.");
     }
