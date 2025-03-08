@@ -38,22 +38,22 @@
         <input type="hidden" id="hiddenOrderId" name="orderId">
 
         <label for="name">Full Name:</label>
-        <input type="text" id="name" name="name" required maxlength>
+        <input type="text" id="name" name="name" required maxlength = "50">
 
         <label for="phone">Phone Number:</label>
-        <input type="tel" id="phone" name="phone" required>
+        <input type="tel" id="phone" name="phone" minlength = "10" maxlength = "10" required>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email">
+        <label for="email">Email Address (optional, for order copy):</label>
+        <input type="email" id="email" name="email" maxlength = "75">
 
         <label for="address">Address:</label>
-        <textarea id="address" name="address" required></textarea>
+        <textarea id="address" name="address" required maxlength = "200"></textarea>
 
         <label for="specialRequest">Special Requests:</label>
-        <textarea id="specialRequest" name="specialRequest"></textarea>
+        <textarea id="specialRequest" name="specialRequest" maxlength = "200"></textarea>
 
         <label for="allergies">Allergies:</label>
-        <textarea id="allergies" name="allergies"></textarea>
+        <textarea id="allergies" name="allergies" maxlength = "100"></textarea>
 
         <button type="submit" class="order-btn">Update Order</button>
     </form>
