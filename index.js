@@ -658,7 +658,7 @@ app.post("/edit-order", async (req, res) => {
     );
 
     if (updatedOrder) {
-         res.sendFile(path.join(__dirname, "views", "update-success.html"));
+         res.sendFile(path.join(__dirname, "views", "update-successful.html"));
     } else {
         res.send("Order ID not found.");
     }
