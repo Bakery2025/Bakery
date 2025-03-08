@@ -1,25 +1,106 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Edit Order - Elicious Bakes</title>
+        <link rel="stylesheet" href="/styles.css" />
+        <link rel="icon" type="image/png" href="images/tabicon.png">
+    </head>
+    <body>
+        <header>
+            <div class="logo-title">
+                <img
+                    src="images/bakery.jpg"
+                    alt="Elicious Bakes Logo"
+                    class="logo"
+                />
+                <h1>Elicious Bakes</h1>
+            </div>
+            <h2 class="custom-order-title">Edit Order</h2>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/menu">Menu</a></li>
+                    <li><a href="/custom-order">Custom Order</a></li>
+                    <li><a href="/track-order">Track Order</a></li>
+                </ul>
+            </nav>
+        </header>
+
 <section class="form-container">
-    <h2>Edit Your Order ✏️</h2>
-    <p>Enter your Order ID and update your details.</p>
-    <form action="/edit-order" method="POST">
-        <label for="orderId">Order ID:</label>
-        <input type="text" id="orderId" name="orderId" required>
+    <h2>Edit Your Order</h2>
+    <p>Your order details are shown below. You can update them as needed.</p>
+    <p><strong>Order ID:</strong> <span id="displayOrderId">Loading...</span></p> <!-- Displays the Order ID -->
+
+    <form id="editOrderForm" action="/edit-order" method="POST">
+        <input type="hidden" id="hiddenOrderId" name="orderId">
 
         <label for="name">Full Name:</label>
-        <input type="text" id="name" name="name">
+        <input type="text" id="name" name="name" required maxlength>
 
         <label for="phone">Phone Number:</label>
-        <input type="tel" id="phone" name="phone">
+        <input type="tel" id="phone" name="phone" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email">
 
         <label for="address">Address:</label>
-        <textarea id="address" name="address"></textarea>
-
-        <label for="items">Order Items:</label>
-        <textarea id="items" name="items"></textarea>
+        <textarea id="address" name="address" required></textarea>
 
         <label for="specialRequest">Special Requests:</label>
         <textarea id="specialRequest" name="specialRequest"></textarea>
 
+        <label for="allergies">Allergies:</label>
+        <textarea id="allergies" name="allergies"></textarea>
+
         <button type="submit" class="order-btn">Update Order</button>
     </form>
 </section>
+
+<script>
+    window.onload = async function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get("id");
+
+        if (!orderId) {
+            alert("No Order ID provided in the URL.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/get-order?id=${orderId}`);
+            const contentType = response.headers.get("content-type");
+
+            if (!contentType || !contentType.includes("application/json")) {
+                const text = await response.text();
+                console.error("Unexpected response:", text);
+                alert("Error: Server did not return valid JSON.");
+                return;
+            }
+
+            const order = await response.json(); // ✅ No more JSON.parse error
+            console.log("Order Data:", order);
+
+            document.getElementById("displayOrderId").textContent = orderId;
+            document.getElementById("hiddenOrderId").value = orderId;
+            document.getElementById("name").value = order.name || "";
+            document.getElementById("phone").value = order.phone || "";
+            document.getElementById("email").value = order.email || "";
+            document.getElementById("address").value = order.address || "";
+            document.getElementById("specialRequest").value = order.specialRequest || "";
+            document.getElementById("allergies").value = order.allergies || "";
+
+        } catch (err) {
+            console.error("Error fetching order:", err);
+            alert("Failed to load order data. Check console for details.");
+        }
+    };
+
+</script>
+        <footer>
+            <p>&copy; 2025 Elicious Bakes. All rights reserved.</p>
+        </footer>
+    </body>
+</html>
