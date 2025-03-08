@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Track Your Order - Elicious Bakes</title>
         <link rel="stylesheet" href="/styles.css" />
-        <link rel="icon" type="image/png" href="images/tabicon.png">
     </head>
     <body>
         <header>
@@ -61,18 +60,31 @@
 
                 <p><strong>Address:</strong> <span id="address"></span></p>
                 <p><strong>Items:</strong> <span id="items"></span></p>
-                <p><strong>Total Price:</strong> <span id="totalPrice"></span></p>
+                <p>
+                    <strong>Total Price:</strong> <span id="totalPrice"></span>
+                </p>
                 <p>
                     <strong>Special Request:</strong>
                     <span id="specialRequest"></span>
                 </p>
-                
-                <p><strong>Allergies:</strong> <span id="allergies"></span></p>
-                <p><strong>Payment Method:</strong> <span id="paymentMethod"></span></p>
-                <p><strong>Order Status:</strong> <span id="orderStatus"></span></p>
-                <p><strong>Order Time:</strong> <span id="orderTimestamp"></span></p>
-                <p><strong>Delivery Time:</strong> <span id="deliveryTimestamp"></span></p>
 
+                <p><strong>Allergies:</strong> <span id="allergies"></span></p>
+                <p>
+                    <strong>Payment Method:</strong>
+                    <span id="paymentMethod"></span>
+                </p>
+                <p>
+                    <strong>Order Status:</strong>
+                    <span id="orderStatus"></span>
+                </p>
+                <p>
+                    <strong>Order Time:</strong>
+                    <span id="orderTimestamp"></span>
+                </p>
+                <p>
+                    <strong>Delivery Time:</strong>
+                    <span id="deliveryTimestamp"></span>
+                </p>
 
                 <button id="editOrder" class="edit-btn" style="display: none">
                     Edit Order
@@ -134,41 +146,79 @@
                         updateField("email", data.email || "Not Provided");
 
                         updateField("address", data.address);
-                        
+
                         if (data.orderType === "Custom") {
-                            updateField("items", data.items && data.items.length > 0 ? data.items[0] : "Custom Order (Details Unavailable)");
+                            updateField(
+                                "items",
+                                data.items && data.items.length > 0
+                                    ? data.items[0]
+                                    : "Custom Order (Details Unavailable)",
+                            );
                         } else {
-                            const itemsContainer = document.getElementById("items");
+                            const itemsContainer =
+                                document.getElementById("items");
                             if (data.items && data.items.length > 0) {
                                 itemsContainer.innerHTML = data.items
-                                    .map(item => `• ${item.name} (x${item.quantity || 1}) - ₹${item.price || 'N/A'}`)
+                                    .map(
+                                        (item) =>
+                                            `• ${item.name} (x${item.quantity || 1}) - ₹${item.price || "N/A"}`,
+                                    )
                                     .join("<br>"); // Using innerHTML so <br> works properly
                             } else {
                                 itemsContainer.textContent = "No Items";
                             }
                         }
 
-
-                        updateField("specialRequest", data.specialRequest || "None");
+                        updateField(
+                            "specialRequest",
+                            data.specialRequest || "None",
+                        );
 
                         // Add new fields
-                        updateField("totalPrice", data.orderType === "Custom" ? null : `₹${data.total}`);
+                        updateField(
+                            "totalPrice",
+                            data.orderType === "Custom"
+                                ? null
+                                : `₹${data.total}`,
+                        );
                         updateField("allergies", data.allergies || "None");
-                        updateField("paymentMethod", data.paymentMethod || "Not Specified");
-                        updateField("orderStatus", data.orderStatus || "Pending");
                         updateField(
-                            "orderTimestamp",
-                            data.orderTimestamp
-                                ? new Date(data.orderTimestamp).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
-                                : "N/A"
+                            "paymentMethod",
+                            data.paymentMethod || "Not Specified",
                         );
                         updateField(
-                            "deliveryTimestamp",
-                            data.deliveryTimestamp
-                                ? new Date(data.deliveryTimestamp).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
-                                : "Not Delivered Yet"
+                            "orderStatus",
+                            data.orderStatus || "Pending",
                         );
+                        function formatDateTime(dateString) {
+                            console.log("Raw date input:", dateString); // Debugging log
 
+                            const date = new Date(dateString); // Ensure JavaScript reads it correctly
+
+                            console.log("Parsed date:", date.toISOString()); // Debugging in UTC format
+
+                            // Convert to IST using toLocaleString
+                            const formattedDate = date.toLocaleString("en-IN", {
+                                timeZone: "Asia/Kolkata",
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                second: "2-digit",
+                                hour12: true // Ensures AM/PM format
+                            });
+
+                            console.log("Formatted date output:", formattedDate); // Final debug check
+                            return formattedDate;
+                        }
+
+                        // Example Usage:
+                        console.log(formatDateTime("2025-03-08T13:22:11.291+00:00")); 
+
+                        // Update fields with formatted timestamps
+                        updateField("orderTimestamp", data.orderTimestamp ? formatDateTime(data.orderTimestamp) : "N/A");
+                        updateField("deliveryTimestamp", data.deliveryTimestamp ? formatDateTime(data.deliveryTimestamp) : "Not Delivered Yet");
 
                         // Show buttons
                         document.getElementById("editOrder").style.display =
@@ -212,3 +262,4 @@
         </script>
     </body>
 </html>
+
