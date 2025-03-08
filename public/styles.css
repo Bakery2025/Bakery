@@ -240,6 +240,10 @@ h2 {
     margin-top: 0px; /* Reduce top margin */
 }
 
+confirmation-header {
+    color: #a14d5d;
+    font-size: 1.5rem;
+}
 
 .custom-order-title {
     font-size: 32px;
@@ -328,13 +332,34 @@ h2 {
 .edit-btn {
     background-color: #f4b400; /* Yellow */
     color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin: 0px
+}
+
+.edit-btn:hover {
+    background: #ebbc09;
 }
 
 .cancel-btn {
     background-color: #ff4d4d; /* Red */
     color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin: 0px
 }
 
+.cancel-btn:hover {
+    background: #e71106;
+}
 .order-btn:hover, .edit-btn:hover, .cancel-btn:hover {
     opacity: 0.8;
 }
@@ -462,6 +487,12 @@ h1, .welcome-message {
     font-size: 48px; /* Adjust size as needed */
     color: #d77fa1; /* Soft pink (matches bakery theme) */
 }
+
+h1, .order-confirmation-page{
+    font-family: 'Apple Chancery', sans-serif;
+    font-size: 48px; /* Adjust size as needed */
+    color: #d77fa1; /* Soft pink (matches bakery theme) */
+}
  
 h2, p {
     font-family: 'Apple Chancery', sans-serif;
@@ -544,6 +575,8 @@ h2, p {
         font-size: 2rem;
     }
 
+
+
     .hero {
         width: 100%;  /* Ensures it takes up the full viewport width */
         height: 50vh;
@@ -572,6 +605,38 @@ h2, p {
         word-wrap: break-word;
         margin: 10px;
     max-width: 90%;
+    }
+
+    .edit-btn {
+        background-color: #f4b400; /* Yellow */
+        color: white;
+        padding: 10px 20px;
+        font-size: 14px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+        margin: 0px;
+    }
+
+    .edit-btn:hover {
+        background: #ebbc09;
+    }
+
+    .cancel-btn {
+        background-color: #ff4d4d; /* Red */
+        color: white;
+        padding: 10px 20px;
+        font-size: 14px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+        margin: 0px
+    }
+
+    .cancel-btn:hover {
+        background: #e71106;
     }
 
     .btn {
