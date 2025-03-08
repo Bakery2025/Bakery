@@ -57,12 +57,22 @@
                 </p>
                 <p><strong>Name:</strong> <span id="name"></span></p>
                 <p><strong>Phone:</strong> <span id="phone"></span></p>
+                <p><strong>Email:</strong> <span id="email"></span></p>
+
                 <p><strong>Address:</strong> <span id="address"></span></p>
                 <p><strong>Items:</strong> <span id="items"></span></p>
+                <p><strong>Total Price:</strong> <span id="totalPrice"></span></p>
                 <p>
                     <strong>Special Request:</strong>
                     <span id="specialRequest"></span>
                 </p>
+                
+                <p><strong>Allergies:</strong> <span id="allergies"></span></p>
+                <p><strong>Payment Method:</strong> <span id="paymentMethod"></span></p>
+                <p><strong>Order Status:</strong> <span id="orderStatus"></span></p>
+                <p><strong>Order Time:</strong> <span id="orderTimestamp"></span></p>
+                <p><strong>Delivery Time:</strong> <span id="deliveryTimestamp"></span></p>
+
 
                 <button id="editOrder" class="edit-btn" style="display: none">
                     Edit Order
@@ -121,19 +131,44 @@
                         updateField("orderIdDisplay", data.orderId);
                         updateField("name", data.name);
                         updateField("phone", data.phone);
+                        updateField("email", data.email || "Not Provided");
+
                         updateField("address", data.address);
+                        
+                        if (data.orderType === "Custom") {
+                            updateField("items", data.items && data.items.length > 0 ? data.items[0] : "Custom Order (Details Unavailable)");
+                        } else {
+                            const itemsContainer = document.getElementById("items");
+                            if (data.items && data.items.length > 0) {
+                                itemsContainer.innerHTML = data.items
+                                    .map(item => `• ${item.name} (x${item.quantity || 1}) - ₹${item.price || 'N/A'}`)
+                                    .join("<br>"); // Using innerHTML so <br> works properly
+                            } else {
+                                itemsContainer.textContent = "No Items";
+                            }
+                        }
+
+
+                        updateField("specialRequest", data.specialRequest || "None");
+
+                        // Add new fields
+                        updateField("totalPrice", data.orderType === "Custom" ? null : `₹${data.total}`);
+                        updateField("allergies", data.allergies || "None");
+                        updateField("paymentMethod", data.paymentMethod || "Not Specified");
+                        updateField("orderStatus", data.orderStatus || "Pending");
                         updateField(
-                            "items",
-                            data.items ? data.items.join(", ") : null,
+                            "orderTimestamp",
+                            data.orderTimestamp
+                                ? new Date(data.orderTimestamp).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+                                : "N/A"
                         );
                         updateField(
-                            "specialRequest",
-                            data.specialRequest || "None",
+                            "deliveryTimestamp",
+                            data.deliveryTimestamp
+                                ? new Date(data.deliveryTimestamp).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+                                : "Not Delivered Yet"
                         );
-                        updateField(
-                            "totalPrice",
-                            data.totalPrice ? `₹${data.totalPrice}` : null,
-                        );
+
 
                         // Show buttons
                         document.getElementById("editOrder").style.display =
