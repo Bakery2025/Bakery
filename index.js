@@ -26,7 +26,10 @@ const orderSchema = new mongoose.Schema({
     orderType: String,
     paymentMethod: String,
     orderStatus: { type: String, default: "Pending" }, 
-    orderTimestamp: { type: String, default: () => new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }) },
+     orderTimestamp: {
+        type: Date, 
+        default: () => new Date()
+    },
     deliveryTimestamp: { type: Date, default: null }
 });
 
