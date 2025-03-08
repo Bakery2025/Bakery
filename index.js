@@ -74,12 +74,12 @@ app.get('/checkout', async (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'checkout.html'));
 });
 
-app.post('/submit-checkout', async (req, res) => {
-    console.log("Received Checkout Data:", req.body);
-
 app.get("/edit-order", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "edit-order.html"));
 });
+
+app.post('/submit-checkout', async (req, res) => {
+    console.log("Received Checkout Data:", req.body);
 
     const { name, phone, address, email, items, total, specialRequest, allergies } = req.body;
     const orderId = crypto.randomBytes(5).toString('hex'); // Generates a random 10-character order ID
