@@ -213,9 +213,6 @@
                             return formattedDate;
                         }
 
-                        // Example Usage:
-                        console.log(formatDateTime("2025-03-08T13:22:11.291+00:00")); 
-
                         // Update fields with formatted timestamps
                         updateField("orderTimestamp", data.orderTimestamp ? formatDateTime(data.orderTimestamp) : "N/A");
                         updateField("deliveryTimestamp", data.deliveryTimestamp ? formatDateTime(data.deliveryTimestamp) : "Not Delivered Yet");
