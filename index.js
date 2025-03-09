@@ -668,16 +668,32 @@ app.post("/edit-order", async (req, res) => {
 });
 
 // Cancel Order Route
-app.post('/cancel-order', async (req, res) => {
+app.post("/cancel-order", async (req, res) => {
     const { orderId } = req.body;
+    
+    const order = await Order.findOne({ orderId });
 
-    const deletedOrder = await Order.findOneAndDelete({ orderId });
-
-    if (deletedOrder) {
-        res.send("Order canceled successfully!");
-    } else {
-        res.send("Order ID not found.");
+    if (!order) {
+        return res.json({ success: false, header: "Error", message: "Order ID not found." });
     }
+
+    const orderTimeLimit = 2 * 60 * 60 * 1000;
+    const orderPlacedTime = new Date(order.orderTimestamp).getTime();
+    const currentTime = Date.now();
+    const orderAge = currentTime - orderPlacedTime;
+
+    console.log("Current Time:", new Date(currentTime).toISOString());
+    console.log("Order Time:", new Date(orderPlacedTime).toISOString());
+    console.log("Order Age (ms):", orderAge);
+    console.log("Time Limit (ms):", orderTimeLimit);
+
+    if (orderAge > orderTimeLimit) {
+        return res.json({ success: false, header: "Sorry! Order Cancellation Not Allowed", message: "Orders can only be cancelled within 2 hours of being ordered." });
+    }
+
+    await Order.findOneAndDelete({ orderId });
+
+    return res.json({ success: true, header: "Success", message: "Your order has been cancelled successfully." });
 });
 
 app.get('/order-confirmation', (req, res) => {
@@ -688,4 +704,5 @@ app.get('/order-confirmation', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+
 
