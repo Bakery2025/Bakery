@@ -55,6 +55,7 @@
         <label for="allergies">Allergies:</label>
         <textarea id="allergies" name="allergies" maxlength = "100"></textarea>
 
+        <button type="button" onclick="window.history.back();" class="return-btn">Return</button>
         <button type="submit" class="order-btn">Update Order</button>
     </form>
 </section>
@@ -80,7 +81,7 @@
                 return;
             }
 
-            const order = await response.json(); // ✅ No more JSON.parse error
+            const order = await response.json(); 
             console.log("Order Data:", order);
 
             document.getElementById("displayOrderId").textContent = orderId;
@@ -104,3 +105,4 @@
         </footer>
     </body>
 </html>
+
