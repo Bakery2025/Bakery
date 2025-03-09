@@ -115,13 +115,22 @@
         </section>
 
         <script>
-            flatpickr("#deliveryDateTime", {
-                enableTime: true,
-    minDate: "today", // Prevents selecting past dates
+         flatpickr("#deliveryDateTime", {
+    enableTime: true,
+    minDate: "today",
     static: true,
     disableMobile: true,
-    defaultDate: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }), // Sets IST timezone
+    defaultDate: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+    onReady: function (selectedDates, dateStr, instance) {
+        instance.calendarContainer.style.left = "-35px";  // Adjust this value as needed
+        instance.calendarContainer.style.right = "auto";
+    },
+    onOpen: function (selectedDates, dateStr, instance) {
+        instance.calendarContainer.style.left = "-35px";  // Adjust this value as needed
+        instance.calendarContainer.style.right = "auto";
+    }
 });
+
 document.getElementById("deliveryType").addEventListener("change", function () {
     const dateTimeLabel = document.getElementById("dateTimeLabel");
 
