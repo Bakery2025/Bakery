@@ -1111,9 +1111,6 @@ option {
 
 .flatpickr-calendar {
     max-width: 90vw !important; /* Ensures it doesn't exceed screen width */
-    right: auto !important;
-    left: 50% !important;
-    transform: translateX(-50%); /* Centers the calendar */
-}
+ }
 
 
