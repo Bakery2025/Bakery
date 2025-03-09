@@ -231,6 +231,22 @@ textarea {
     background: #ff5c5c;
 }
 
+.return-btn {
+    background-color: #d8b4a6;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.return-btn:hover {
+    background-color: #c39c91;
+}
+
+
 h1 {
     margin: 0;  /* Remove any default margin to align with logo */
     padding: 0;  /* Remove any default padding */
@@ -360,7 +376,7 @@ confirmation-header {
 .cancel-btn:hover {
     background: #e71106;
 }
-.order-btn:hover, .edit-btn:hover, .cancel-btn:hover {
+.order-btn:hover, .edit-btn:hover, .return-btn:hover, .cancel-btn:hover {
     opacity: 0.8;
 }
 
@@ -780,6 +796,10 @@ h2, p {
         font-size: 16px;
     }
 
+    .return-btn {
+        font-size: 16px;
+    }
+
     .contact p {
         font-size: 16px;
     }
@@ -987,3 +1007,67 @@ nav ul li a:focus {
     outline: none;
     box-shadow: none;
 }
+
+/* Popup Background (Dim Effect) */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Dark transparent background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Show popup when it's active */
+.popup.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Popup Content Box */
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+    width: 80%;
+}
+
+/* Popup Header */
+.popup-content h2 {
+    margin-top: 0;
+    color: #a14d5d; 
+}
+
+/* Popup Message */
+.popup-content p {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Popup OK Button */
+.popup-content button {
+background: #ff85a2;
+color: white;
+padding: 10px 20px;
+font-size: 18px;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+transition: 0.3s;
+}
+
+.popup-content button:hover {
+    background-color: #ff6381;
+}
+
+
