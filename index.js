@@ -25,11 +25,10 @@ const orderSchema = new mongoose.Schema({
     allergies: String,
     orderType: String,
     paymentMethod: String,
-    orderStatus: { type: String, default: "Pending" }, 
-     orderTimestamp: {
-        type: Date, 
-        default: () => new Date()
-    },
+    deliveryType: String,
+    deliveryDateTime: { type: Date, default: () => new Date() },
+    orderStatus: { type: String, default: "Pending" },
+    orderTimestamp: { type: Date, default: () => new Date() },
     deliveryTimestamp: { type: Date, default: null }
 });
 
@@ -84,10 +83,9 @@ app.get("/edit-order", (req, res) => {
 app.post('/submit-checkout', async (req, res) => {
     console.log("Received Checkout Data:", req.body);
 
-    const { name, phone, address, email, items, total, specialRequest, allergies } = req.body;
+    const { name, phone, address, email, items, total, specialRequest, allergies, deliveryType, deliveryDateTime } = req.body;
     const orderId = crypto.randomBytes(5).toString('hex'); // Generates a random 10-character order ID
-    var orderType = 'Standand-Order'
-        const newOrder = new Order({
+    const newOrder = new Order({
         orderId,
         name,
         phone,
@@ -99,6 +97,8 @@ app.post('/submit-checkout', async (req, res) => {
         allergies,
         orderType: "Regular",
         paymentMethod: "Cash",
+        deliveryType,
+        deliveryDateTime
     });
     await newOrder.save();
 
@@ -191,6 +191,16 @@ app.post('/submit-checkout', async (req, res) => {
 
                                 <th>Address</th>
                                 <td>${newOrder.address}</td>
+                            </tr>
+<tr>
+
+                                <th>Delivery Type</th>
+                                <td>${newOrder.deliveryType}</td>
+                            </tr>
+                            <tr>
+
+                                <th>Delivery/Pickup Date & Time</th>
+                                <td>${newOrder.deliveryDateTime}</td>
                             </tr>
                             <tr>
                                 <th>Items</th>
@@ -322,18 +332,23 @@ app.post('/submit-checkout', async (req, res) => {
                                     <th>Address</th>
                                     <td>${newOrder.address}</td>
                                 </tr>
+                                <tr>
+                                <th>Delivery Type</th>
+                                <td>${newOrder.deliveryType}</td>
+                            </tr>
+                            <tr>
 
+                                <th>Delivery/Pickup Date & Time</th>
+                                <td>${newOrder.deliveryDateTime}</td>
+                            </tr>
                                  <tr>
                                 <th>Items</th>
                                 <td>${newOrder.items.map(item => `<li>${item.name} (x${item.quantity || 1}) - ₹${item.price || 'N/A'}</li>`).join('')}</td>
                             </tr>
-
                               <tr>
                            <th>Total Price</th>
                             <td>₹ ${newOrder.total?.toLocaleString('en-IN') || 'N/A'}</td>
                             </tr>
-
-
                                 <tr>
                                     <th>Special Request</th>
                                     <td>${newOrder.specialRequest || 'None'}</td>
@@ -368,11 +383,10 @@ app.post('/submit-checkout', async (req, res) => {
 });
 
 app.post('/submit-order', async (req, res) => {
-    const { name, phone, address, email, items, specialRequest, allergies } = req.body;
-    var orderType = 'Custom-Order'
+    const { name, phone, address, email, items, specialRequest, allergies, deliveryType, deliveryDateTime } = req.body;
     const orderId = crypto.randomBytes(5).toString('hex'); // Generates a random 10-character order ID
 
-     const newOrder = new Order({
+    const newOrder = new Order({
         orderId,
         name,
         phone,
@@ -383,6 +397,8 @@ app.post('/submit-order', async (req, res) => {
         allergies,
         orderType: "Custom",
         paymentMethod: "Cash",
+        deliveryType,
+        deliveryDateTime
     });
     await newOrder.save();
 
@@ -475,6 +491,16 @@ app.post('/submit-order', async (req, res) => {
 
                                 <th>Address</th>
                                 <td>${newOrder.address}</td>
+                            </tr>
+                            <tr>
+
+                                <th>Delivery Type</th>
+                                <td>${newOrder.deliveryType}</td>
+                            </tr>
+                            <tr>
+
+                                <th>Delivery/Pickup Date & Time</th>
+                                <td>${newOrder.deliveryDateTime}</td>
                             </tr>
                             <tr>
                                 <th>Items</th>
@@ -590,6 +616,15 @@ app.post('/submit-order', async (req, res) => {
                                     <td>${newOrder.address}</td>
                                 </tr>
                                 <tr>
+                                <th>Delivery Type</th>
+                                <td>${newOrder.deliveryType}</td>
+                            </tr>
+                            <tr>
+
+                                <th>Delivery/Pickup Date & Time</th>
+                                <td>${newOrder.deliveryDateTime}</td>
+                            </tr>
+                                <tr>
                                     <th>Items</th>
                                     <td>${newOrder.items.join(', ')}</td>
                                 </tr>
@@ -661,7 +696,7 @@ app.post("/edit-order", async (req, res) => {
     );
 
     if (updatedOrder) {
-         res.sendFile(path.join(__dirname, "views", "update-successful.html"));
+        res.sendFile(path.join(__dirname, "views", "update-successful.html"));
     } else {
         res.send("Order ID not found.");
     }
@@ -670,7 +705,7 @@ app.post("/edit-order", async (req, res) => {
 // Cancel Order Route
 app.post("/cancel-order", async (req, res) => {
     const { orderId } = req.body;
-    
+
     const order = await Order.findOne({ orderId });
 
     if (!order) {
@@ -704,5 +739,3 @@ app.get('/order-confirmation', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
-
-
