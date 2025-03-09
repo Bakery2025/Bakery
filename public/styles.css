@@ -1103,10 +1103,17 @@ option {
     margin-bottom: 0; /* Removes margin specifically for order quantity dropdowns */
 }
 
-.flatpickr-calendar {
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: 80vw !important; /* Adjust width to be more compact */
-    max-width: 320px !important; /* Ensures it doesn't get too big */
+.flatpickr-container {
+    position: relative;
+    overflow: hidden; /* Ensures it doesn’t go out of bounds */
+    max-width: 100%; /* Ensures responsiveness */
 }
+
+.flatpickr-calendar {
+    max-width: 90vw !important; /* Ensures it doesn't exceed screen width */
+    right: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%); /* Centers the calendar */
+}
+
 
