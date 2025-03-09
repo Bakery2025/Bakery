@@ -6,6 +6,8 @@
         <title>Custom Order - Elicious Bakes</title>
         <link rel="stylesheet" href="/styles.css"/>
         <link rel="icon" type="image/png" href="images/tabicon.png">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     </head>
     <body>
         <header>
@@ -72,6 +74,16 @@
                     required
                 ></textarea>
 
+                <label for="deliveryType">Select Delivery Type:</label>
+                <select id="deliveryType" name="deliveryType" required>
+                    <option value="" disabled selected>Select a Delivery Type</option>
+                    <option value="Pickup">Pick Up</option>
+                    <option value="Delivery">Delivery</option>
+                </select>
+
+                <label id="dateTimeLabel" for="deliveryDateTime">Select Delivery Date & Time:</label>
+                <input type="text" id="deliveryDateTime" name="deliveryDateTime" required />
+                
                 <label for="items">Order Details:</label>
                 <textarea
                     id="items"
@@ -101,6 +113,24 @@
                 <button type="submit" class="order-btn">Place Order</button>
             </form>
         </section>
+
+        <script>
+            flatpickr("#deliveryDateTime", {
+    enableTime: true,
+    minDate: "today", // Prevents selecting past dates
+    defaultDate: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }), // Sets IST timezone
+});
+
+document.getElementById("deliveryType").addEventListener("change", function () {
+    const dateTimeLabel = document.getElementById("dateTimeLabel");
+
+    if (this.value === "Pickup") {
+        dateTimeLabel.textContent = "Select Pickup Date & Time:";
+    } else if (this.value === "Delivery") {
+        dateTimeLabel.textContent = "Select Delivery Date & Time:";
+    }
+});
+        </script>
 
         <footer>
             <p>&copy; 2025 Elicious Bakes. All rights reserved.</p>
