@@ -30,6 +30,14 @@
             </nav>
         </header>
 
+        <div id="custom-popup" class="popup hidden">
+            <div class="popup-content">
+                <h2 id="popup-header">Header</h2>
+                <p id="popup-message">Message</p>
+                <button onclick="closePopup()">OK</button>
+            </div>
+        </div>    
+
         <section class="form-container">
             <h2>Track Your Order</h2>
             <p>
@@ -79,7 +87,7 @@
                     <span id="orderStatus"></span>
                 </p>
                 <p>
-                    <strong>Order Time:</strong>
+                    <strong>Ordered At:</strong>
                     <span id="orderTimestamp"></span>
                 </p>
                 <p>
@@ -250,14 +258,37 @@
                                         },
                                     );
 
-                                    const result = await cancelResponse.text();
-                                    alert(result);
-                                    window.location.reload();
+                                    const result = await cancelResponse.json();
+                                    
+                                    if (result.header && result.message) {
+            showPopup(result.header, result.message); // Ensure values are passed
+        } else {
+            showPopup("Error", "Something went wrong. Please try again.");
+        }
                                 }
                             };
                     }
                 });
+                
+    
+                function showPopup(header, message) {
+    document.getElementById("popup-header").innerText = header;
+    document.getElementById("popup-message").innerText = message;
+
+    const popup = document.getElementById("custom-popup");
+    popup.classList.add("show");
+}
+
+// Close the popup when clicking the OK button
+function closePopup() {
+    document.getElementById("custom-popup").classList.remove("show");
+    window.location.reload()
+}
+
+
         </script>
     </body>
 </html>
+
+
 
