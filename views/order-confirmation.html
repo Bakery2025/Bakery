@@ -14,10 +14,14 @@
     
     <section class="confirmation">
         <p>Thank you for your order! Your delicious treats will be prepared soon. 🍰</p>
-        <p><strong>Order ID:</strong>  <span id="order-id"></span></p>
+        <p><strong>Order ID:</strong>  <span id="order-id"></span>
+        <span>&nbsp;</span>
+        <button id="copyOrderIdBtn" class="copy-btn">Copy Order ID</button></p>
         <p>Use your Order ID to edit or cancel your order.</p>
        <p><b>Please save this Order ID for future references.</b></p>
-        <a href="/">Return to Home</a>
+       <a href="/">Return to Home Page</a> &nbsp; | &nbsp;
+       <a href="/track-order">Track Your Order</a>
+
     </section>
 
     <footer>
@@ -25,6 +29,25 @@
     </footer>
 
     <script>
+        const orderId = new URLSearchParams(window.location.search).get('id') || 'N/A';
+        
+        // Set the Order ID in the page
+        document.getElementById('order-id').textContent = orderId;
+
+        // Handle the copy button click
+        document.getElementById('copyOrderIdBtn').addEventListener('click', function() {
+            // Create a temporary input to hold the Order ID for copying
+            const tempInput = document.createElement('input');
+            tempInput.value = orderId;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            // Notify the user that the Order ID was copied
+            alert('Order ID copied to clipboard!');
+        });
+
         document.getElementById('order-id').textContent = new URLSearchParams(window.location.search).get('id') || 'N/A';
     </script>
 </body>
