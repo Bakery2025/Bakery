@@ -85,9 +85,11 @@
     </section>
 
     <script>
- flatpickr("#deliveryDateTime", {
-    enableTime: true,
+  flatpickr("#deliveryDateTime", {
+                enableTime: true,
     minDate: "today", // Prevents selecting past dates
+    static: true,
+    disableMobile: true,
     defaultDate: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }), // Sets IST timezone
 });
 
