@@ -1070,4 +1070,35 @@ transition: 0.3s;
     background-color: #ff6381;
 }
 
+/* Style the select dropdown */
+select {
+    width: 100%; /* Make it full width */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #f8c9d5; /* Light purple border */
+    border-radius: 8px;
+    background: #fffafc;  /* Light pastel background */
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
 
+
+/* Style the dropdown arrow */
+select:focus {
+    outline: none;
+    border-color: #ff85a2; /* Highlight color when focused */
+    box-shadow: #ff85a2
+}
+
+/* Make the dropdown options more readable */
+option {
+    font-size: 16px;
+    background-color: #fff;
+    color: #ff85a2;
+}
+
+.order-quantity {
+    margin-bottom: 0; /* Removes margin specifically for order quantity dropdowns */
+}
