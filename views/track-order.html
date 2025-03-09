@@ -66,7 +66,6 @@
                 <p><strong>Name:</strong> <span id="name"></span></p>
                 <p><strong>Phone:</strong> <span id="phone"></span></p>
                 <p><strong>Email:</strong> <span id="email"></span></p>
-
                 <p><strong>Address:</strong> <span id="address"></span></p>
                 <p><strong>Items:</strong> <span id="items"></span></p>
                 <p>
@@ -90,9 +89,10 @@
                     <strong>Ordered At:</strong>
                     <span id="orderTimestamp"></span>
                 </p>
+                <p><strong>Delivery Type:</strong> <span id="deliveryType"></span></p>
                 <p>
                     <strong>Delivery Time:</strong>
-                    <span id="deliveryTimestamp"></span>
+                    <span id="deliveryDateTime"></span>
                 </p>
 
                 <button id="editOrder" class="edit-btn" style="display: none">
@@ -153,7 +153,8 @@
                         updateField("name", data.name);
                         updateField("phone", data.phone);
                         updateField("email", data.email || "Not Provided");
-
+                        updateField("deliveryType", data.deliveryType);
+                        updateField("deliveryDateTime", data.deliveryDateTime);
                         updateField("address", data.address);
 
                         if (data.orderType === "Custom") {
@@ -224,8 +225,7 @@
 
                         // Update fields with formatted timestamps
                         updateField("orderTimestamp", data.orderTimestamp ? formatDateTime(data.orderTimestamp) : "N/A");
-                        updateField("deliveryTimestamp", data.deliveryTimestamp ? formatDateTime(data.deliveryTimestamp) : "Not Delivered Yet");
-
+                        updateField("deliveryDateTime", data.deliveryDateTime ? formatDateTime(data.deliveryDateTime) : "Not Delivered Yet");
                         // Show buttons
                         document.getElementById("editOrder").style.display =
                             "inline-block";
@@ -289,6 +289,4 @@ function closePopup() {
         </script>
     </body>
 </html>
-
-
 
