@@ -118,6 +118,7 @@
          flatpickr("#deliveryDateTime", {
     enableTime: true,
     minDate: "today",
+    maxDate: new Date().fp_incr(15), 
     static: true,
     disableMobile: true,
     defaultDate: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
