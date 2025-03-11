@@ -1240,6 +1240,7 @@ option {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s;
+    margin: 3px 0
 }
 
 .option:hover {
