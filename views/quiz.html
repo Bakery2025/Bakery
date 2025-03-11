@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Which Dessert Are You? - Elicious Bakes</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" type="image/png" href="images/tabicon.png">
+</head>
+<style>
+    .order-btn {
+        display: block;
+        margin: 0 auto;
+    }
+</style>
+
+<body>
+    <header>
+        <div class="logo-title">
+            <img src="images/bakery.jpg" alt="Elicious Bake's Logo" class="logo">
+            <h1>Elicious Bakes</h1>
+        </div>
+        <h2 class="custom-order-title">Quiz</h2>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/menu">Menu</a></li>
+                <li><a href="/custom-order">Custom Order</a></li>
+                <li><a href="/track-order">Track Order</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="custom-popup-ok" class="popup hidden">
+        <div class="popup-content">
+            <h2 id="popup-header-ok">Header</h2>
+            <p id="popup-message-ok">Message</p>
+            <button onclick="closeOkPopup()">OK</button> <!-- Fixed onclick -->
+        </div>
+    </div>
+
+    <section class="form-container">
+        <h2 class="custom-order-title">Which Dessert Are You?</h2>
+        <div id="quiz">
+            <div class="question">1. What's your go-to comfort food?</div>
+            <div class="options" data-question="1">
+                <button class="option" data-dessert="cake">Chocolate</button>
+                <button class="option" data-dessert="cheesecake">Fruits</button>
+                <button class="option" data-dessert="croissant">Pastries</button>
+                <button class="option" data-dessert="brownie">Cookies</button>
+            </div>
+
+            <div class="question">2. How do you like your dessert?</div>
+            <div class="options" data-question="2">
+                <button class="option" data-dessert="cheesecake">Creamy & rich</button>
+                <button class="option" data-dessert="donut">Sweet & simple</button>
+                <button class="option" data-dessert="croissant">Flaky & buttery</button>
+                <button class="option" data-dessert="cake">Gooey & indulgent</button>
+            </div>
+
+            <div class="question">3. If you were at a bakery, what would you pick first?</div>
+            <div class="options" data-question="3">
+                <button class="option" data-dessert="cake">A slice of cake</button>
+                <button class="option" data-dessert="cupcake">A cupcake</button>
+                <button class="option" data-dessert="brownie">A cookie</button>
+                <button class="option" data-dessert="donut">A donut</button>
+            </div>
+
+            <div class="question">4. What best describes your personality?</div>
+            <div class="options" data-question="4">
+                <button class="option" data-dessert="cupcake">Fun & bubbly</button>
+                <button class="option" data-dessert="cheesecake">Sophisticated & elegant</button>
+                <button class="option" data-dessert="brownie">Warm & comforting</button>
+                <button class="option" data-dessert="croissant">Classy & refined</button>
+            </div>
+
+            <div class="question">5. What's your favorite time of the day?</div>
+            <div class="options" data-question="5">
+                <button class="option" data-dessert="cake">Evening – time to relax!</button>
+                <button class="option" data-dessert="donut">Morning – fresh start!</button>
+                <button class="option" data-dessert="brownie">Night – peace & quiet</button>
+                <button class="option" data-dessert="cupcake">Afternoon – energetic vibes!</button>
+            </div>
+        </div>
+
+        <button class="order-btn" onclick="showResult()">See Your Dessert!</button>
+
+        <div id="result" style="display: none;">
+            <h2>You're...</h2>
+            <p id="dessert-text"></p>
+            <button class="order-btn" onclick="restartQuiz()">Retake Quiz</button>
+        </div>
+        </form>
+
+    </section>
+
+    <script>
+        let scores = {};
+
+        document.querySelectorAll(".option").forEach(option => {
+            option.addEventListener("click", function () {
+                const dessertType = this.getAttribute("data-dessert");
+                const questionNumber = this.parentElement.getAttribute("data-question");
+
+                // Remove previous selection
+                const selectedOption = document.querySelector(`.options[data-question="${questionNumber}"] .selected`);
+                if (selectedOption) selectedOption.classList.remove("selected");
+
+                this.classList.add("selected");
+                scores[dessertType] = (scores[dessertType] || 0) + 1;
+            });
+        });
+
+        function showResult() {
+            const questions = document.querySelectorAll(".options");
+            let allQuestionsAnswered = true;
+
+            questions.forEach(question => {
+                if (!question.querySelector(".selected")) {
+                    allQuestionsAnswered = false;
+                }
+            });
+
+            if (!allQuestionsAnswered) {
+                showPopup("No Cheating!", "Please answer all questions before submitting");
+                return;
+            }
+
+            let maxScore = -1;
+            let bestMatch = "";
+
+            for (const dessert in scores) {
+                if (scores[dessert] > maxScore) {
+                    maxScore = scores[dessert];
+                    bestMatch = dessert;
+                }
+            }
+
+            if (!bestMatch) {
+                alert("Please answer all questions before submitting!");
+                return;
+            }
+
+            let dessertText = {
+                "cake": "You're the life of the party! Classic, loved by everyone, and always bringing joy to those around you.",
+                "cheesecake": "You're smooth, sophisticated, and full of charm. People can't resist your comforting yet luxurious presence.",
+                "croissant": "You're elegant, refined, and always a little mysterious. Simple on the outside, but deeply layered within.",
+                "brownie": "You're warm, cozy, and a little bit indulgent. The kind of person everyone turns to for comfort and happiness.",
+                "donut": "You're playful, colorful, and always full of energy! You make life sweeter for those around you.",
+                "cupcake": "You're small but mighty! Cute, fun, and packed with personality—everyone loves having you around."
+            };
+
+            document.getElementById("quiz").style.display = "none";
+            document.getElementById("result").style.display = "block";
+            document.getElementById("dessert-text").innerText = dessertText[bestMatch] || "You're a mystery dessert!";
+            document.querySelector(".order-btn").style.display = "none";
+        }
+
+        function restartQuiz() {
+            scores = {};
+            document.querySelectorAll(".option").forEach(option => option.classList.remove("selected"));
+            document.getElementById("quiz").style.display = "block";
+            document.getElementById("result").style.display = "none";
+            document.querySelector(".order-btn").style.display = "block";
+        }
+
+        function showPopup(header, message) {
+            document.getElementById("popup-header-ok").innerText = header;
+            document.getElementById("popup-message-ok").innerText = message;
+
+            const popup = document.getElementById("custom-popup-ok");
+            popup.classList.add("show");
+        }
+
+        // Close the OK popup
+        function closeOkPopup() {
+            document.getElementById("custom-popup-ok").classList.remove("show");
+            window.location.reload(); // Remove if you don't want the page to refresh
+        }
+    </script>
+
+</body>
+
+</html>
