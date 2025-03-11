@@ -30,6 +30,17 @@
         </nav>
     </header>
 
+    <div id="custom-popup" class="popup">
+        <div class="popup-content">
+            <h2 id="popup-header"></h2>
+            <p id="popup-message"></p>
+            <div class="popup-buttons">
+                <button id="popup-yes" class="popup-button yes">Yes</button>
+                <button id="popup-no" class="popup-button no">No</button>
+            </div>
+        </div>
+    </div>
+    
     <section class="form-container">
         <h2>Your Order</h2>
         <table id="order-summary">
@@ -69,8 +80,7 @@
             </select>
 
             <label id="dateTimeLabel" for="deliveryDateTime">Select Delivery Date & Time:</label>
-<input type="text" id="deliveryDateTime" name="deliveryDateTime" required />
-
+            <input type="text" id="deliveryDateTime" name="deliveryDateTime" required />
 
             <label for="specialRequest">Special Requests:</label>
             <textarea id="specialRequest" placeholder="Red gift wrap, custom messages, frosting color..."
@@ -85,33 +95,56 @@
     </section>
 
     <script>
- flatpickr("#deliveryDateTime", {
-    enableTime: true,
-    minDate: "today",
-    maxDate: new Date().fp_incr(15), 
-    static: true,
-    disableMobile: true,
-    defaultDate: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
-    onReady: function (selectedDates, dateStr, instance) {
-        instance.calendarContainer.style.left = "-35px";  // Adjust this value as needed
-        instance.calendarContainer.style.right = "auto";
-    },
-    onOpen: function (selectedDates, dateStr, instance) {
-        instance.calendarContainer.style.left = "-35px";  // Adjust this value as needed
-        instance.calendarContainer.style.right = "auto";
-    }
-});
+        function showConfirmationPopup(header, message, onConfirm) {
+            document.getElementById("popup-header").innerText = header;
+            document.getElementById("popup-message").innerText = message;
+
+            const popup = document.getElementById("custom-popup");
+            popup.classList.add("show");
+
+            document.getElementById("popup-yes").onclick = function () {
+                closePopup();
+                if (typeof onConfirm === "function") {
+                    onConfirm();
+                }
+            };
+
+            document.getElementById("popup-no").onclick = closePopup;
+        }
+
+        function closePopup() {
+            document.getElementById("custom-popup").classList.remove("show");
+        }
 
 
-document.getElementById("deliveryType").addEventListener("change", function () {
-    const dateTimeLabel = document.getElementById("dateTimeLabel");
+        flatpickr("#deliveryDateTime", {
+            enableTime: true,
+            minDate: "today",
+            maxDate: new Date().fp_incr(15),
+            static: true,
+            disableMobile: true,
+            defaultDate: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+            onReady: function (selectedDates, dateStr, instance) {
+                instance.calendarContainer.style.left = "-35px";
+                instance.calendarContainer.style.right = "auto";
+            },
+            onOpen: function (selectedDates, dateStr, instance) {
+                instance.calendarContainer.style.left = "-35px";
+                instance.calendarContainer.style.right = "auto";
+            }
+        });
 
-    if (this.value === "Pickup") {
-        dateTimeLabel.textContent = "Select Pickup Date & Time:";
-    } else if (this.value === "Delivery") {
-        dateTimeLabel.textContent = "Select Delivery Date & Time:";
-    }
-});
+
+        document.getElementById("deliveryType").addEventListener("change", function () {
+            const dateTimeLabel = document.getElementById("dateTimeLabel");
+
+            if (this.value === "Pickup") {
+                dateTimeLabel.textContent = "Select Pickup Date & Time:";
+            } else if (this.value === "Delivery") {
+                dateTimeLabel.textContent = "Select Delivery Date & Time:";
+            }
+        });
+
 
         document.addEventListener("DOMContentLoaded", function () {
             const selectedItems =
@@ -124,6 +157,8 @@ document.getElementById("deliveryType").addEventListener("change", function () {
             );
             const totalPriceElement =
                 document.getElementById("total-price");
+
+
 
             function updateTotal() {
                 let newTotal = selectedItems.reduce(
@@ -194,6 +229,11 @@ document.getElementById("deliveryType").addEventListener("change", function () {
                 .addEventListener("submit", function (event) {
                     event.preventDefault();
 
+                    showConfirmationPopup("Confirm Order", "Are you sure you want to place this order?", function () {
+    submitOrder();
+});
+
+function submitOrder() {
                     const orderData = {
                         name: document.getElementById("name").value,
                         phone: document.getElementById("phone").value,
@@ -234,8 +274,10 @@ document.getElementById("deliveryType").addEventListener("change", function () {
                         .catch((error) =>
                             console.error("Error placing order:", error),
                         );
+                    }
                 });
         });
+    
     </script>
     <footer>
         <p>&copy; 2025 Elicious Bakes. All rights reserved.</p>
