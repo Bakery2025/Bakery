@@ -40,7 +40,7 @@
             </div>
         </div>
     </div>
-    
+
     <section class="form-container">
         <h2>Your Order</h2>
         <table id="order-summary">
@@ -49,14 +49,29 @@
                     <th>Item</th>
                     <th>Quantity</th>
                     <th>Price per item</th>
-                    <th>Total Price</th>
+                    <th>Sub total</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
 
-        <h3>Total Price: ₹<span id="total-price">0</span></h3>
+        <div class="price-summary">
+            <div class="price-row">
+                <span>Subtotal:</span>
+                <span id="subtotal-amount">₹0</span>
+            </div>
+            <div class="price-row discount">
+                <span>Discount:</span>
+                <span id="discount-amount">₹0</span>
+            </div>
+            <div class="price-row total">
+                <span>Total Price:</span>
+                <span id="total-price">₹0</span>
+            </div>
+        </div>
+    </section>
 
+    <section class="customer-container">
         <h2>Customer Details</h2>
         <form id="order-form" action="/submit-checkout" method="POST">
             <label for="name">Full Name:</label>
@@ -147,6 +162,17 @@
 
 
         document.addEventListener("DOMContentLoaded", function () {
+
+            const savedName = localStorage.getItem("name");
+            const savedPhone = localStorage.getItem("phone");
+            const savedEmail = localStorage.getItem("email");
+            const savedAddress = localStorage.getItem("address");
+
+            if (savedName) document.getElementById("name").value = savedName;
+            if (savedPhone) document.getElementById("phone").value = savedPhone;
+            if (savedEmail) document.getElementById("email").value = savedEmail;
+            if (savedAddress) document.getElementById("address").value = savedAddress;
+
             const selectedItems =
                 JSON.parse(localStorage.getItem("selectedItems")) || [];
             let totalPrice =
@@ -159,16 +185,29 @@
                 document.getElementById("total-price");
 
 
-
             function updateTotal() {
-                let newTotal = selectedItems.reduce(
-                    (sum, item) => sum + item.price,
-                    0,
-                );
-                totalPrice = newTotal;
-                totalPriceElement.textContent = totalPrice;
-                localStorage.setItem("totalPrice", totalPrice);
+                let subtotal = selectedItems.reduce((sum, item) => sum + item.price, 0); // Get subtotal
+                let discount = 0;
+
+                // Apply discounts based on subtotal
+                if (subtotal > 1500) {
+                    discount = subtotal * 0.15; // 15% discount
+                } else if (subtotal > 1000) {
+                    discount = subtotal * 0.10; // 10% discount
+                }
+
+                let finalTotal = subtotal - discount; // Calculate final total after discount
+
+                document.getElementById("total-price").textContent = `₹${finalTotal.toFixed(2)}`;
+
+                document.getElementById("discount-amount").textContent = `- ₹${discount.toFixed(2)}`; // Show discount
+                document.getElementById("subtotal-amount").textContent = `₹${subtotal.toFixed(2)}`; // Show subtotal
+
+                localStorage.setItem("totalPrice", finalTotal.toFixed(2));
+                totalPrice = finalTotal; // Ensure totalPrice is updated correctly
+                // Store final total in localStorage
             }
+
 
             function updateItemPrice(index, quantity) {
                 const item = selectedItems[index];
@@ -230,54 +269,63 @@
                     event.preventDefault();
 
                     showConfirmationPopup("Confirm Order", "Are you sure you want to place this order?", function () {
-    submitOrder();
-});
+                        submitOrder();
+                    });
 
-function submitOrder() {
-                    const orderData = {
-                        name: document.getElementById("name").value,
-                        phone: document.getElementById("phone").value,
-                        email: document.getElementById("email").value,
-                        address: document.getElementById("address").value,
-                        deliveryType: document.getElementById("deliveryType").value,
-                        deliveryDateTime: document.getElementById("deliveryDateTime").value,
-                        specialRequest:
-                            document.getElementById("specialRequest").value,
-                        allergies:
-                            document.getElementById("allergies").value,
-                        items: selectedItems,
-                        total: totalPrice,
-                    };
-                    console.log(
-                        "🛒 Selected Items from localStorage:",
-                        selectedItems,
-                    );
+                    function submitOrder() {
+                        const orderData = {
+                            name: document.getElementById("name").value,
+                            phone: document.getElementById("phone").value,
+                            email: document.getElementById("email").value,
+                            address: document.getElementById("address").value,
+                            deliveryType: document.getElementById("deliveryType").value,
+                            deliveryDateTime: document.getElementById("deliveryDateTime").value,
+                            specialRequest:
+                                document.getElementById("specialRequest").value,
+                            allergies:
+                                document.getElementById("allergies").value,
+                            items: selectedItems,
+                            total: totalPrice,
+                        };
 
-                    console.log("Order Placed:", orderData);
-                    localStorage.clear();
-                    fetch("/submit-checkout", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(orderData),
-                    })
-                        .then((response) => response.json()) // Parse JSON response
-                        .then((data) => {
-                            if (data.success) {
-                                localStorage.clear();
-                                window.location.href = `/order-confirmation?id=${data.orderId}`; // Manually redirect
-                            } else {
-                                alert(
-                                    "❌ Error placing order. Please try again.",
-                                );
-                            }
-                        })
-                        .catch((error) =>
-                            console.error("Error placing order:", error),
+                        localStorage.setItem("name", document.getElementById("name").value);
+                        localStorage.setItem("phone", document.getElementById("phone").value);
+                        localStorage.setItem("email", document.getElementById("email").value);
+                        localStorage.setItem("address", document.getElementById("address").value);
+
+
+                        console.log(
+                            "🛒 Selected Items from localStorage:",
+                            selectedItems,
                         );
+
+                        console.log("Order Placed:", orderData);
+                        localStorage.removeItem("selectedItems");
+                        localStorage.removeItem("totalPrice");
+                        fetch("/submit-checkout", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(orderData),
+                        })
+                            .then((response) => response.json()) // Parse JSON response
+                            .then((data) => {
+                                if (data.success) {
+                                    localStorage.removeItem("selectedItems");
+                                    localStorage.removeItem("totalPrice");
+                                    window.location.href = `/order-confirmation?id=${data.orderId}`; // Manually redirect
+                                } else {
+                                    alert(
+                                        "❌ Error placing order. Please try again.",
+                                    );
+                                }
+                            })
+                            .catch((error) =>
+                                console.error("Error placing order:", error),
+                            );
                     }
                 });
         });
-    
+
     </script>
     <footer>
         <p>&copy; 2025 Elicious Bakes. All rights reserved.</p>
