@@ -9,8 +9,17 @@
 </head>
 <body>
     <header>
-        <h1>🎉 Order Placed Successfully! 🎉</h1>
+        <h1>Order Placed Successfully!</h1>
     </header>
+
+    <div id="custom-popup-ok" class="popup hidden">
+        <div class="popup-content">
+            <h2 id="popup-header-ok">Header</h2>
+            <p id="popup-message-ok">Message</p>
+            <button onclick="closeOkPopup()">OK</button>  <!-- Fixed onclick -->
+        </div>
+    </div>    
+    
     
     <section class="confirmation">
         <p>Thank you for your order! Your delicious treats will be prepared soon. 🍰</p>
@@ -45,8 +54,21 @@
             document.body.removeChild(tempInput);
 
             // Notify the user that the Order ID was copied
-            alert('Order ID copied to clipboard!');
+            showPopup(`Order ID Copied!`, `Your Order ID: ${orderId} has been copied to clipboard`);
         });
+
+        function showPopup(header, message) {
+    document.getElementById("popup-header-ok").innerText = header;
+    document.getElementById("popup-message-ok").innerText = message;
+
+    const popup = document.getElementById("custom-popup-ok");
+    popup.classList.add("show");
+}
+
+// Close the OK popup
+function closeOkPopup() {
+    document.getElementById("custom-popup-ok").classList.remove("show");
+}
 
         document.getElementById('order-id').textContent = new URLSearchParams(window.location.search).get('id') || 'N/A';
     </script>
