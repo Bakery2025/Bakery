@@ -85,18 +85,48 @@
     </section>
 
     <script>
-        document.querySelector("form").addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent the form from submitting immediately
+        document.addEventListener("DOMContentLoaded", function () {
+            // Load saved user info if available
+            const savedName = localStorage.getItem("name");
+            const savedPhone = localStorage.getItem("phone");
+            const savedEmail = localStorage.getItem("email");
+            const savedAddress = localStorage.getItem("address");
 
-            showConfirmationPopup(
-                "Confirm Order",
-                "Are you sure you want to place this order?",
-                () => {
-                    event.target.submit(); // Submit the form if the user confirms
-                }
-            );
+            if (savedName) document.getElementById("name").value = savedName;
+            if (savedPhone) document.getElementById("phone").value = savedPhone;
+            if (savedEmail) document.getElementById("email").value = savedEmail;
+            if (savedAddress) document.getElementById("address").value = savedAddress;
         });
 
+        document.querySelector("form").addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent default submission
+
+        // Save user details in localStorage
+        localStorage.setItem("name", document.getElementById("name").value);
+        localStorage.setItem("phone", document.getElementById("phone").value);
+        localStorage.setItem("email", document.getElementById("email").value);
+        localStorage.setItem("address", document.getElementById("address").value);
+
+        showConfirmationPopup(
+            "Confirm Order",
+            "Are you sure you want to place this order?",
+            () => {
+                event.target.submit(); // Submit the form after confirmation
+            }
+        );
+    });
+
+    function clearSavedInfo() {
+        localStorage.removeItem("name");
+        localStorage.removeItem("phone");
+        localStorage.removeItem("email");
+        localStorage.removeItem("address");
+
+        document.getElementById("name").value = "";
+        document.getElementById("phone").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("address").value = "";
+    }
 
         function showConfirmationPopup(header, message, onConfirm) {
             document.getElementById("popup-header").innerText = header;
