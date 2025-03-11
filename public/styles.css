@@ -1208,3 +1208,57 @@ option {
 .copy-btn:hover {
     background-color: #ff5c5c; /* Darker pink */
 }
+
+#quiz, #result {
+    background: #fff6f6;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.question {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 15px 0;
+    color: #444;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.option {
+    background-color: #ffccda;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.option:hover {
+    background-color: #ff85a2;
+    color: white;
+}
+
+.option.selected {
+    background-color: #ff497c;
+    color: white;
+    font-weight: bold;
+}
+
+#result h2 {
+    color: #d63384;
+}
+
+#dessert-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #444;
+}
