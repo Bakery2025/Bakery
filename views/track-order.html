@@ -30,13 +30,24 @@
             </nav>
         </header>
 
-        <div id="custom-popup" class="popup hidden">
+        <div id="custom-popup-ok" class="popup hidden">
             <div class="popup-content">
-                <h2 id="popup-header">Header</h2>
-                <p id="popup-message">Message</p>
-                <button onclick="closePopup()">OK</button>
+                <h2 id="popup-header-ok">Header</h2>
+                <p id="popup-message-ok">Message</p>
+                <button onclick="closeOkPopup()">OK</button>  <!-- Fixed onclick -->
             </div>
         </div>    
+        
+        <div id="custom-popup" class="popup">
+            <div class="popup-content">
+                <h2 id="popup-header"></h2>
+                <p id="popup-message"></p>
+                <div class="popup-buttons">
+                    <button id="popup-yes" class="popup-button yes">Yes</button>
+                    <button id="popup-no" class="popup-button no">No</button>
+                </div>
+            </div>
+        </div>
 
         <section class="form-container">
             <h2>Track Your Order</h2>
@@ -267,26 +278,47 @@
         }
                                 }
                             };
+                            
                     }
                 });
                 
     
                 function showPopup(header, message) {
+    document.getElementById("popup-header-ok").innerText = header;
+    document.getElementById("popup-message-ok").innerText = message;
+
+    const popup = document.getElementById("custom-popup-ok");
+    popup.classList.add("show");
+}
+
+// Close the OK popup
+function closeOkPopup() {
+    document.getElementById("custom-popup-ok").classList.remove("show");
+    window.location.reload(); // Remove if you don't want the page to refresh
+}
+
+function showConfirmationPopup(header, message, onConfirm) {
     document.getElementById("popup-header").innerText = header;
     document.getElementById("popup-message").innerText = message;
 
     const popup = document.getElementById("custom-popup");
     popup.classList.add("show");
+
+    document.getElementById("popup-yes").onclick = function () {
+        closeConfirmationPopup();
+        if (typeof onConfirm === "function") {
+            onConfirm();
+        }
+    };
+
+    document.getElementById("popup-no").onclick = closeConfirmationPopup;
 }
 
-// Close the popup when clicking the OK button
-function closePopup() {
+// Close the confirmation popup
+function closeConfirmationPopup() {
     document.getElementById("custom-popup").classList.remove("show");
-    window.location.reload()
 }
-
 
         </script>
     </body>
 </html>
-
