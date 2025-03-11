@@ -1113,4 +1113,21 @@ option {
     max-width: 90vw !important; /* Ensures it doesn't exceed screen width */
  }
 
+.popup-button.yes {
+    background-color: rgb(16, 150, 16);
+    color: white;
+}
+
+.popup-button.yes:hover {
+    background-color: #0f791a;
+}
+
+.popup-button.no {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+.popup-button.no:hover {
+    background-color: #e71106;
+}
 
