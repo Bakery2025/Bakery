@@ -1062,7 +1062,7 @@ nav ul li a:focus {
 
 /* Popup Content Box */
 .popup-content {
-    background: white;
+    background: #fff6f6;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
@@ -1174,6 +1174,7 @@ option {
 }
 
 .price-row {
+    font-family: 'Apple Chancery', sans-serif;
     display: flex;
     justify-content: space-between;
     margin: 3px 0;
@@ -1191,4 +1192,19 @@ option {
     font-size: 16px; /* Reduce total price text */
     font-weight: bold;
     color: #0f791a;
+}
+
+.copy-btn {
+    font-size: 14px;
+    padding: 5px 10px;
+    background-color: #ff85a2; /* Light pink */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.copy-btn:hover {
+    background-color: #ff5c5c; /* Darker pink */
 }
