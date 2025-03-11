@@ -185,6 +185,26 @@ nav ul li a {
     color: #6c757d;
 }
 
+.customer-container {
+    width: 50%;
+    margin: 40px auto;
+    background: #fff6f6;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.customer-container h2 {
+    font-size: 28px;
+    color: #d63384;
+}
+
+.customer-container p {
+    font-size: 16px;
+    color: #6c757d;
+}
+
 label {
     display: block;
     font-weight: bold;
@@ -792,6 +812,15 @@ h2, p {
         font-size: 24px;
     }
 
+    .customer-container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .customer-container h2 {
+        font-size: 24px;
+    }
+
     .order-btn {
         font-size: 16px;
     }
@@ -1111,7 +1140,7 @@ option {
 
 .flatpickr-calendar {
     max-width: 90vw !important; /* Ensures it doesn't exceed screen width */
- }
+}
 
 .popup-button.yes {
     background-color: rgb(16, 150, 16);
@@ -1131,3 +1160,35 @@ option {
     background-color: #e71106;
 }
 
+.price-summary {
+    background: #fff5f8; /* Soft pastel pink */
+    padding: 10px 14px; /* Reduce padding */
+    border-radius: 8px; /* Slightly smaller border radius */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    width: 230px; /* Reduce width */
+    margin: 12px auto;
+    font-size: 14px; /* Reduce text size */
+    font-family: 'Poppins', sans-serif;
+    border: 1.5px solid #ffccd5;
+    margin-bottom: 25px;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 3px 0;
+    padding: 3px 6px; /* Slightly smaller padding */
+    font-weight: 500;
+}
+
+.discount {
+    color: #ff5e78;
+    font-weight: 600;
+    font-size: 14px; /* Smaller discount text */
+}
+
+.total {
+    font-size: 16px; /* Reduce total price text */
+    font-weight: bold;
+    color: #0f791a;
+}
