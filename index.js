@@ -80,6 +80,10 @@ app.get("/edit-order", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "edit-order.html"));
 });
 
+app.get('/quiz', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'quiz.html'));
+});
+
 app.post('/submit-checkout', async (req, res) => {
     console.log("Received Checkout Data:", req.body);
 
