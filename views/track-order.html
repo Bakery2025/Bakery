@@ -197,11 +197,7 @@
 
                         // Add new fields
                         updateField(
-                            "totalPrice",
-                            data.orderType === "Custom"
-                                ? null
-                                : `₹${data.total}`,
-                        );
+                            "totalPrice",`₹${data.total}` || "N/A",);
                         updateField("allergies", data.allergies || "None");
                         updateField(
                             "paymentMethod",
