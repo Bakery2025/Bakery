@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Elicious Bakes</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" type="image/png" href="images/tabicon.png">
+</head>
+
+<body>
+    <header>
+        <div class="logo-title">
+            <img src="images/bakery.jpg" alt="Elicious Bake's Logo" class="logo">
+            <h1>Elicious Bakes</h1>
+        </div>
+        <h2 class="custom-order-title">Admin</h2>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/menu">Menu</a></li>
+                <li><a href="/custom-order">Custom Order</a></li>
+                <li><a href="/track-order">Track Order</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="admin-dashboard">
+        <section class="admin-stats">
+            <h3>Dashboard Overview</h3>
+            <div class="stats-container">
+                <div class="stat-item"><strong>Total Items Sold:</strong> <span id="total-items">0</span></div>
+                <div class="stat-item"><strong>Total Revenue:</strong> ₹<span id="total-revenue">0</span></div>
+                <div class="stat-item"><strong>Pending Orders:</strong> <span id="pending-orders">0</span></div>
+                <div class="stat-item"><strong>Completed Orders:</strong> <span id="completed-orders">0</span></div>
+            </div>
+        </section>
+
+
+
+        <section class="orders-list">
+            <h3>Order Management</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Total Price</th>
+                        <th>Items</th> <!-- ✅ Added this header -->
+                        <th>Allergies</th>
+                        <th>Change Status</th>
+                    </tr>
+                </thead>
+                <tbody id="order-table">
+
+                    <tr>
+                        <td data-label="Order ID">#1234</td>
+                        <td data-label="Customer">John Doe</td>
+                        <td data-label="Total">₹450</td>
+                        <td data-label="Items">3 Cakes</td>
+                        <td data-label="Allergies">₹450</td>
+                        <td data-label="Status">Pending</td>
+                    </tr>
+                    
+                    <tr>
+                        <td data-label="Order ID">#1234</td>
+                        <td data-label="Customer">John Doe</td>
+                        <td data-label="Total">₹450</td>
+                        <td data-label="Items">3 Cakes</td>
+                        <td data-label="Allergies">₹450</td>
+                        <td data-label="Status">Pending</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="analytics">
+            <h3>Top Selling Items</h3>
+            <ul id="top-items-list">
+                <li>Loading...</li>
+            </ul>
+        </section>
+        
+    </main>
+
+    <script>
+
+
+        async function loadStats() {
+            const res = await fetch('/dashboard/stats');  // ✅ Corrected route
+            const data = await res.json();
+
+            document.getElementById('total-items').textContent = data.totalItems;
+            document.getElementById('total-revenue').textContent = data.totalRevenue.toFixed(2);
+            document.getElementById('pending-orders').textContent = data.pendingOrders;
+            document.getElementById('completed-orders').textContent = data.completedOrders;
+        }
+
+        async function loadOrders() {
+            const res = await fetch('/dashboard/orders');
+            const orders = await res.json();
+
+            const table = document.getElementById('order-table');
+            table.innerHTML = orders.map(order => {
+                // Format items based on order type
+                let itemsDisplay = "No Items";
+                if (order.items && order.items.length > 0) {
+                    if (order.orderType === "Custom") {
+                        itemsDisplay = `${order.items[0] || "Details Unavailable"}`;
+                    }
+                    else {
+                        itemsDisplay = order.items
+                            .map(item => `• ${item.name} (x${item.quantity || 1}) - ₹${item.price || "N/A"}`)
+                            .join("<br>");
+                    }
+                }
+
+                return `
+<tr>
+    <td>${order.orderId}</td>
+    <td>${order.name}</td>
+    <td>
+        ₹ <input type="number" value="${order.total}" min="0" 
+            style="width: 80px; padding: 4px; text-align: center;" 
+            onchange="updateTotal('${order.orderId}', this.value)" />
+    </td>
+    <td>${itemsDisplay}</td> <!-- ✅ This now aligns under "Items" -->
+    <td>${order.allergies?.trim() ? order.allergies : "None"}</td> <!-- ✅ Allergies aligns right -->
+    <td>
+        <select onchange="updateStatus('${order.orderId}', this.value)">
+            <option ${order.orderStatus === 'Pending' ? 'selected' : ''} value="Pending">Pending</option>
+            <option ${order.orderStatus === 'Completed' ? 'selected' : ''} value="Completed">Completed</option>
+            <option ${order.orderStatus === 'Cancelled' ? 'selected' : ''} value="Cancelled">Cancelled</option>
+        </select>
+    </td>
+</tr>`;
+
+            }).join('');
+        }
+        async function loadAnalytics() {
+    try {
+        const res = await fetch('/dashboard/analytics');
+        const data = await res.json();
+
+        console.log('Analytics Data:', data); // ✅ Debug log
+
+        // ✅ Update stats section
+        document.querySelector('.stats-container').innerHTML = `
+            <div class="stat-item"><strong>Total Orders:</strong> <span>${data.totalOrders}</span></div>
+            <div class="stat-item"><strong>Total Revenue:</strong> ₹<span>${data.totalRevenue}</span></div>
+            <div class="stat-item"><strong>Pending Orders:</strong> <span>${data.orderStatusCount.Pending}</span></div>
+            <div class="stat-item"><strong>Completed Orders:</strong> <span>${data.orderStatusCount.Completed}</span></div>
+        `;
+
+        // ✅ Render Top Items List — now sorted and capped at 10
+        // ✅ Render Top Items List — clean version, capped at 10
+const topItemsList = document.getElementById('top-items-list');
+if (data.topItems.length) {
+    const sortedItems = data.topItems.sort((a, b) => b.count - a.count).slice(0, 10);
+
+    topItemsList.innerHTML = sortedItems
+        .map((item, index) => `${index + 1}. <strong>${item.name}:</strong> ${item.count} sold`)
+        .join('<br>'); // Line breaks between items
+} else {
+    topItemsList.innerHTML = '<li>No top items yet.</li>';
+}
+
+
+    } catch (err) {
+        console.error("Failed to load analytics:", err);
+        document.querySelector('.analytics').innerHTML = `<p>Error loading analytics.</p>`;
+    }
+}
+
+        async function updateStatus(orderId, status) {
+            await fetch('/dashboard/update-status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId, status })
+            });
+            loadStats();
+            loadOrders();
+            loadAnalytics()
+        }
+
+        window.onload = () => {
+            loadStats();
+            loadOrders();
+            loadAnalytics()
+        };
+
+        async function updateTotal(orderId, newTotal) {
+    await fetch('/dashboard/update-total', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, total: parseFloat(newTotal) })
+    });
+    loadStats(); 
+    loadOrders(); 
+    loadAnalytics()
+}
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Access - Elicious Bakes</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" type="image/png" href="images/tabicon.png">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo-title">
+            <img src="images/bakery.jpg" alt="Elicious Bake's Logo" class="logo">
+            <h1>Elicious Bakes</h1>
+        </div>
+        <h2 class="custom-order-title">Admin Access</h2>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/menu">Menu</a></li>
+                <li><a href="/custom-order">Custom Order</a></li>
+                <li><a href="/track-order">Track Order</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <section class="form-container">
+        <h2>Admin Access</h2>
+        <form id="login-form">
+            <input type="password" id="password" placeholder="Enter Password" required />
+            <button type="submit" class="order-btn">Login</button>
+            <p id="login-error" style="display: none;">Wrong password. Try again!</p>
+        </form>
+    </section>
+    
+
+    <script>
+  if (localStorage.getItem("adminLoggedIn") === "true") {
+        window.location.href = "/dashboard";
+    }
+
+        const ADMIN_PASSWORD = "BakeryRocks@"; 
+        document.getElementById("login-form").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const password = document.getElementById("password").value;
+
+            if (password === ADMIN_PASSWORD) {
+                localStorage.setItem("adminLoggedIn", "true");
+                setTimeout(() => {
+    window.location.href = "/dashboard";
+}, 200)
+            } else {
+                document.getElementById("login-error").style.display = "block";
+            }
+        });
+    </script>
+
+</body>
+
+</html>
