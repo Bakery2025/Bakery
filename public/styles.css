@@ -1229,6 +1229,7 @@ option {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    justify-content: center;
 }
 
 .option {
@@ -1240,7 +1241,7 @@ option {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s;
-    margin: 3px 0
+    margin: 3px 0;
 }
 
 .option:hover {
@@ -1262,4 +1263,139 @@ option {
     font-size: 1.2rem;
     font-weight: bold;
     color: #444;
+}
+
+.admin-dashboard {
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+}
+
+.admin-stats, .orders-list, .analytics {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+h3 {
+    color: #444;
+    margin-bottom: 10px;
+}
+
+.stats-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.stat-item {
+    background: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    flex: 1;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    word-wrap: break-word;
+}
+
+
+table th {
+    background: #f0f0f0;
+    color: #555;
+}
+
+
+td:nth-child(4), td:nth-child(5) {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#top-items-chart {
+    width: 700px; /* Wider */
+    height: 300px; /* Shorter */
+    display: block;
+    margin: 0 auto; /* Center it nicely */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+/* Make sure headers stay in place */
+thead {
+    display: table-header-group !important;  /* Force headers to stick */
+}
+
+/* Rows and cells styling */
+table th,
+table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+    white-space: nowrap;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    table tr {
+        display: table-row;
+    }
+
+    table td,
+    table th {
+        display: table-cell;
+    }
+
+    table th {
+        background-color: #f8d7da; /* Soft pink bakery vibe */
+        color: #6d2e46;
+    }
+}
+
+#top-items-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+#top-items-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+    font-size: 1rem;
+}
+
+#top-items-list li:first-child {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #FF6347; /* Coral color for top item */
 }
