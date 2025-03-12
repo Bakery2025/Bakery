@@ -1265,12 +1265,16 @@ option {
     color: #444;
 }
 
+/* Wrapper Styling */
 .admin-dashboard {
     padding: 20px;
     font-family: 'Arial', sans-serif;
 }
 
-.admin-stats, .orders-list, .analytics {
+/* Section Containers */
+.admin-dashboard .admin-stats,
+.admin-dashboard .orders-list,
+.admin-dashboard .analytics {
     margin-bottom: 20px;
     padding: 10px;
     border: 1px solid #ddd;
@@ -1279,19 +1283,21 @@ option {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-h3 {
+/* Headings Styling */
+.admin-dashboard h3 {
     color: #444;
     margin-bottom: 10px;
 }
 
-.stats-container {
+/* Stats Container Styling */
+.admin-dashboard .stats-container {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 10px;
 }
 
-.stat-item {
+.admin-dashboard .stat-item {
     background: #fff;
     padding: 10px;
     border-radius: 5px;
@@ -1300,101 +1306,96 @@ h3 {
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-table {
+/* Table Styling */
+.admin-dashboard table {
     width: 100%;
     border-collapse: collapse;
     text-align: center;
+    table-layout: auto;
 }
 
-table th, table td {
+.admin-dashboard table th,
+.admin-dashboard table td {
     padding: 10px;
     border: 1px solid #ddd;
     text-align: center;
+    white-space: normal; /* Allow content to wrap */
+    word-wrap: break-word
 }
 
-th, td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    word-wrap: break-word;
+/* Keep cells clean and prevent overflow */
+.admin-dashboard td:nth-child(4),
+.admin-dashboard td:nth-child(5) {
+    max-width: unset; /* Remove width limit */
+    overflow: visible; /* Show full content */
+    text-overflow: unset; 
 }
 
-
-table th {
+/* Table Header Styling */
+.admin-dashboard table th {
     background: #f0f0f0;
     color: #555;
 }
 
-
-td:nth-child(4), td:nth-child(5) {
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-#top-items-chart {
-    width: 700px; /* Wider */
-    height: 300px; /* Shorter */
+/* Chart Size */
+.admin-dashboard #top-items-chart {
+    width: 700px;
+    height: 300px;
     display: block;
-    margin: 0 auto; /* Center it nicely */
+    margin: 0 auto;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+/* Sticky Header Support */
+.admin-dashboard thead {
+    display: table-header-group !important;
 }
 
-/* Make sure headers stay in place */
-thead {
-    display: table-header-group !important;  /* Force headers to stick */
-}
-
-/* Rows and cells styling */
-table th,
-table td {
+/* Row & Cell Styling */
+.admin-dashboard table th,
+.admin-dashboard table td {
     padding: 10px;
     border: 1px solid #ddd;
     text-align: left;
     white-space: nowrap;
 }
 
-/* Mobile responsiveness */
+/* Mobile Responsiveness */
 @media (max-width: 600px) {
-    table {
+    .admin-dashboard table {
         display: block;
         overflow-x: auto;
         white-space: nowrap;
     }
 
-    table tr {
+    .admin-dashboard table tr {
         display: table-row;
     }
 
-    table td,
-    table th {
+    .admin-dashboard table td,
+    .admin-dashboard table th {
         display: table-cell;
     }
 
-    table th {
+    .admin-dashboard table th {
         background-color: #f8d7da; /* Soft pink bakery vibe */
         color: #6d2e46;
     }
 }
 
-#top-items-list {
+/* Top Items List Styling */
+.admin-dashboard #top-items-list {
     list-style: none;
     padding: 0;
     margin-top: 10px;
 }
 
-#top-items-list li {
+.admin-dashboard #top-items-list li {
     padding: 8px 0;
     border-bottom: 1px solid #ddd;
     font-size: 1rem;
 }
 
-#top-items-list li:first-child {
+.admin-dashboard #top-items-list li:first-child {
     font-size: 1.1rem;
     font-weight: bold;
     color: #FF6347; /* Coral color for top item */
