@@ -34,6 +34,16 @@ const orderSchema = new mongoose.Schema({
 
 const Order = mongoose.model('Order', orderSchema);
 
+const adminSchema = new mongoose.Schema({
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    createdAt: { type: Date, default: Date.now }
+});
+
+module.exports = mongoose.model('Admin', adminSchema);
+
+
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -43,6 +53,15 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
+
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin.html'));
+});
+
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
+});
+
 
 app.get('/about', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'about.html'));
@@ -84,9 +103,9 @@ app.get('/quiz', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'quiz.html'));
 });
 
-app.post('/submit-checkout', async (req, res) => {
-    console.log("Received Checkout Data:", req.body);
 
+app.post('/submit-checkout', async (req, res) => {
+    // console.log("Received Checkout Data:", req.body);
     const { name, phone, address, email, items, total, specialRequest, allergies, deliveryType, deliveryDateTime } = req.body;
     const orderId = crypto.randomBytes(5).toString('hex'); // Generates a random 10-character order ID
     const newOrder = new Order({
@@ -739,7 +758,132 @@ app.get('/order-confirmation', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'order-confirmation.html'));
 });
 
+app.get('/dashboard/stats', async (req, res) => {
+    try {
+        const allOrders = await Order.find();
+
+        // Filter valid orders (exclude Cancelled & Pending)
+        const validOrders = allOrders.filter(order => !['Cancelled', 'Pending'].includes(order.orderStatus));
+
+        // Track pending & completed orders separately
+        const pendingOrders = allOrders.filter(order => order.orderStatus === 'Pending').length;
+        const completedOrders = allOrders.filter(order => order.orderStatus === 'Completed').length;
+
+        // Ensure totalRevenue and totalItems handle missing or bad data
+        const totalItems = validOrders.reduce((acc, order) => acc + (order.items?.length || 0), 0);
+
+        const totalRevenue = validOrders.reduce((acc, order) => {
+            const orderTotal = typeof order.total === 'string' ? parseFloat(order.total.replace(/[^\d.]/g, '')) : parseFloat(order.total);
+            return acc + (isNaN(orderTotal) ? 0 : orderTotal);
+        }, 0);
+
+        // Return the cleaned-up data
+        res.json({ 
+            totalItems, 
+            totalRevenue: totalRevenue.toFixed(2), // Format to ₹0.00
+            pendingOrders, 
+            completedOrders 
+        });
+
+    } catch (err) {
+        console.error('Error in /admin/stats:', err.stack);
+        res.status(500).json({ error: 'Failed to load stats' });
+    }
+});
+
+
+app.get('/dashboard/orders', async (req, res) => {
+    try {
+        const orders = await Order.find();
+        res.json(orders);
+    } catch (err) {
+        console.error('Failed to fetch orders:', err);
+        res.status(500).json({ error: 'Failed to load orders' });
+    }
+});
+
+app.post('/dashboard/update-status', async (req, res) => {
+    const { orderId, status } = req.body;
+    try {
+        await Order.findOneAndUpdate({ orderId }, { orderStatus: status });
+        res.json({ message: 'Order status updated' });
+    } catch (err) {
+        console.error('Failed to update order:', err);
+        res.status(500).json({ error: 'Failed to update status' });
+    }
+});
+
+app.post('/dashboard/update-total', async (req, res) => {
+    const { orderId, total } = req.body;
+
+    try {
+        const updatedOrder = await Order.findOneAndUpdate(
+            { orderId },
+            { $set: { total: parseFloat(total) } },
+            { new: true }
+        );
+
+        if (!updatedOrder) return res.status(404).json({ error: "Order not found" });
+
+        res.json({ success: true, total: updatedOrder.total });
+    } catch (err) {
+        console.error("Failed to update total:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+app.get('/dashboard/analytics', async (req, res) => {
+    try {
+        const allOrders = await Order.find();
+
+        // ✅ Separate valid orders (exclude Cancelled & Pending)
+        const validOrders = allOrders.filter(order => 
+            !['Cancelled', 'Pending'].includes(order.orderStatus)
+        );
+
+        // ✅ Count revenue & total orders
+        const totalRevenue = validOrders.reduce((acc, order) => acc + (parseFloat(order.total) || 0), 0);
+        const totalOrders = allOrders.length;
+        
+        // ✅ Track Pending & Completed orders
+        const orderStatusCount = {
+            Pending: allOrders.filter(order => order.orderStatus === 'Pending').length,
+            Completed: validOrders.filter(order => order.orderStatus === 'Completed').length
+        };
+
+        // ✅ Track top items (ignore items from "Custom" orderType)
+        let itemCounts = {};
+        validOrders.forEach(order => {
+            if (order.orderType && order.orderType.toLowerCase() === "custom") return; // Ignore entire order's items
+
+            if (order.items && Array.isArray(order.items)) {
+                order.items.forEach(item => {
+                    itemCounts[item.name] = (itemCounts[item.name] || 0) + (item.quantity || 1);
+                });
+            }
+        });
+
+        // ✅ Get Top 5 Items (clean list, no custom order items)
+        const topItems = Object.entries(itemCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10)
+            .map(([name, count]) => ({ name, count }));
+
+        // ✅ Return final clean analytics
+        res.json({
+            totalRevenue: totalRevenue.toFixed(2),
+            totalOrders,
+            orderStatusCount,
+            topItems
+        });
+
+    } catch (err) {
+        console.error("Error fetching analytics:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+
