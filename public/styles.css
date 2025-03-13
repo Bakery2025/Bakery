@@ -1400,3 +1400,26 @@ option {
     font-weight: bold;
     color: #FF6347; /* Coral color for top item */
 }
+
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+#password {
+    padding-right: 40px; /* Space for the eye icon */
+}
+
+#togglePassword {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    width: 20px;
+    height: 35px;
+}
+
+#login-error {
+    color: red;
+    font-weight: bold;
+}
