@@ -813,6 +813,18 @@ app.post('/dashboard/update-status', async (req, res) => {
     }
 });
 
+app.post('/dashboard/update-delivery-type', async (req, res) => {
+    const { orderId, deliveryType } = req.body;
+    try {
+        await Order.findOneAndUpdate({ orderId }, { deliveryType: deliveryType });
+        res.json({ message: 'Delivery type updated' });
+    } catch (err) {
+        console.error('Failed to update delivery type:', err);
+        res.status(500).json({ error: 'Failed to update delivery type' });
+    }
+});
+
+
 app.post('/dashboard/update-total', async (req, res) => {
     const { orderId, total } = req.body;
 
