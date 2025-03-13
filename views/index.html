@@ -1,75 +1,113 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Home - Elicious Bakes</title>
-        <link rel="stylesheet" href="/styles.css" />
-        <link rel="icon" type="image/png" href="images/tabicon.png">
-    </head>
 
-    <style>
-        .btn {
-            margin: 4px
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home - Elicious Bakes</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="icon" type="image/png" href="images/tabicon.png">
+</head>
+
+<style>
+    .btn {
+        margin: 4px
+    }
+</style>
+
+<body>
+    <header>
+        <div class="logo-title">
+            <img src="images/bakery.jpg" alt="Elicious Bakes" class="logo" />
+            <h1>Elicious Bakes</h1>
+        </div>
+        <h2 class="custom-order-title">Home Page</h2>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/menu">Menu</a></li>
+                <li><a href="/custom-order">Custom Order</a></li>
+                <li><a href="/track-order">Track Order</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section with Slideshow Background -->
+    <section class="hero">
+        <div class="hero-overlay">
+            <h2>Welcome to Elicious Bakes!</h2>
+            <p>
+                Baked with love, just for you—cakes, donuts, pizzas too! Order now and take a bite, every treat is pure
+                delight!
+            </p>
+            <a href="/menu" class="btn">View Menu</a>
+            <a href="/custom-order" class="btn">Place a Custom Order</a>
+        </div>
+    </section>
+
+    <script>
+let tapCount = 0;
+let lastTapTime = 0;
+
+// Detect if it's a touch device
+const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+// Tap handler function
+function handleTap() {
+    const currentTime = new Date().getTime();
+    const timeDiff = currentTime - lastTapTime;
+
+    if (timeDiff < 600) {
+        tapCount++;
+    } else {
+        tapCount = 1; // Reset if too slow
+    }
+
+    lastTapTime = currentTime;
+
+    if (tapCount === 5) {
+        tapCount = 0;
+        window.location.href = "/admin";
+    }
+
+    // Reset tap count after 3 seconds of inactivity
+    setTimeout(() => (tapCount = 0), 3000);
+}
+
+// Bind event based on device type
+document.addEventListener("DOMContentLoaded", () => {
+    if (isTouchDevice) {
+        document.body.addEventListener("touchend", handleTap);
+    } else {
+        document.body.addEventListener("click", handleTap);
+    }
+});
+
+
+        // Slide Background Images
+        const slides = [
+            "images/slide1.webp",
+        ];
+
+        let slideIndex = 0;
+
+        function changeBackground() {
+            document.querySelector(".hero").style.backgroundImage =
+                `url(${slides[slideIndex]})`;
+            slideIndex = (slideIndex + 1) % slides.length;
         }
-    </style>
-    <body>
-        <header>
-            <div class="logo-title">
-                <img
-                    src="images/bakery.jpg"
-                    alt="Elicious Bakes"
-                    class="logo"
-                />
-                <h1>Elicious Bakes</h1>
-            </div>
-            <h2 class="custom-order-title">Home Page</h2>
-            <nav>
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/about">About Us</a></li>
-                    <li><a href="/menu">Menu</a></li>
-                    <li><a href="/custom-order">Custom Order</a></li>
-                    <li><a href="/track-order">Track Order</a></li>
-                </ul>
-            </nav>
-        </header>
 
-        <!-- Hero Section with Slideshow Background -->
-        <section class="hero">
-            <div class="hero-overlay">
-                <h2>Welcome to Elicious Bakes!</h2>
-                <p>
-                    Baked with love, just for you—cakes, donuts, pizzas too! Order now and take a bite, every treat is pure delight!
-                </p>
-                <a href="/menu" class="btn">View Menu</a>
-                <a href="/custom-order" class="btn">Place a Custom Order</a>
-            </div>
-        </section>
+        // Change background every 5 seconds
+        setInterval(changeBackground, 5000);
 
-        <script>
-            // Slide Background Images
-            const slides = [
-                "images/slide1.webp",
-            ];
+        // Initial background load
+        document.addEventListener("DOMContentLoaded", changeBackground);
+    </script>
 
-            let slideIndex = 0;
+    <footer>
+        <p>&copy; 2025 Elicious Bakes. All rights reserved.</p>
+    </footer>
+</body>
 
-            function changeBackground() {
-                document.querySelector(".hero").style.backgroundImage =
-                    `url(${slides[slideIndex]})`;
-                slideIndex = (slideIndex + 1) % slides.length;
-            }
-
-            // Change background every 5 seconds
-            setInterval(changeBackground, 5000);
-
-            // Initial background load
-            document.addEventListener("DOMContentLoaded", changeBackground);
-        </script>
-
-        <footer>
-            <p>&copy; 2025 Elicious Bakes. All rights reserved.</p>
-        </footer>
-    </body>
 </html>
