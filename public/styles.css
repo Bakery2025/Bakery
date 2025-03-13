@@ -1312,7 +1312,10 @@ option {
     border-collapse: collapse;
     text-align: center;
     table-layout: auto;
+    overflow-x: auto;  /* Enable horizontal scroll */
+    display: block;    /* Allow scrolling */
 }
+
 
 .admin-dashboard table th,
 .admin-dashboard table td {
