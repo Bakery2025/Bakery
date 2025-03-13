@@ -25,6 +25,7 @@
                 <li><a href="/track-order">Track Order</a></li>
             </ul>
         </nav>
+        <button id="logout-button" class="cancel-btn">Logout</button>
     </header>
 
     <main class="admin-dashboard">
@@ -63,7 +64,7 @@
                         <td data-label="Allergies">₹450</td>
                         <td data-label="Status">Pending</td>
                     </tr>
-                    
+
                     <tr>
                         <td data-label="Order ID">#1234</td>
                         <td data-label="Customer">John Doe</td>
@@ -82,10 +83,32 @@
                 <li>Loading...</li>
             </ul>
         </section>
-        
     </main>
 
+    <div id="custom-popup" class="popup">
+        <div class="popup-content">
+            <h2 id="popup-header"></h2>
+            <p id="popup-message"></p>
+            <div class="popup-buttons">
+                <button id="popup-yes" class="popup-button yes">Yes</button>
+                <button id="popup-no" class="popup-button no">No</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+
+document.getElementById("logout-button").addEventListener("click", () => {
+    showConfirmationPopup(
+        "Confirm Logout",
+        "Are you sure you want to log out?",
+        () => {
+            // If the user confirms "Yes", this runs:
+            localStorage.removeItem("adminLoggedIn");
+            window.location.href = "/";
+        }
+    );
+});
 
 
         async function loadStats() {
@@ -140,39 +163,39 @@
             }).join('');
         }
         async function loadAnalytics() {
-    try {
-        const res = await fetch('/dashboard/analytics');
-        const data = await res.json();
+            try {
+                const res = await fetch('/dashboard/analytics');
+                const data = await res.json();
 
-        console.log('Analytics Data:', data); // ✅ Debug log
+                console.log('Analytics Data:', data); // ✅ Debug log
 
-        // ✅ Update stats section
-        document.querySelector('.stats-container').innerHTML = `
+                // ✅ Update stats section
+                document.querySelector('.stats-container').innerHTML = `
             <div class="stat-item"><strong>Total Orders:</strong> <span>${data.totalOrders}</span></div>
             <div class="stat-item"><strong>Total Revenue:</strong> ₹<span>${data.totalRevenue}</span></div>
             <div class="stat-item"><strong>Pending Orders:</strong> <span>${data.orderStatusCount.Pending}</span></div>
             <div class="stat-item"><strong>Completed Orders:</strong> <span>${data.orderStatusCount.Completed}</span></div>
         `;
 
-        // ✅ Render Top Items List — now sorted and capped at 10
-        // ✅ Render Top Items List — clean version, capped at 10
-const topItemsList = document.getElementById('top-items-list');
-if (data.topItems.length) {
-    const sortedItems = data.topItems.sort((a, b) => b.count - a.count).slice(0, 10);
+                // ✅ Render Top Items List — now sorted and capped at 10
+                // ✅ Render Top Items List — clean version, capped at 10
+                const topItemsList = document.getElementById('top-items-list');
+                if (data.topItems.length) {
+                    const sortedItems = data.topItems.sort((a, b) => b.count - a.count).slice(0, 10);
 
-    topItemsList.innerHTML = sortedItems
-        .map((item, index) => `${index + 1}. <strong>${item.name}:</strong> ${item.count} sold`)
-        .join('<br>'); // Line breaks between items
-} else {
-    topItemsList.innerHTML = '<li>No top items yet.</li>';
-}
+                    topItemsList.innerHTML = sortedItems
+                        .map((item, index) => `${index + 1}. <strong>${item.name}:</strong> ${item.count} sold`)
+                        .join('<br>'); // Line breaks between items
+                } else {
+                    topItemsList.innerHTML = '<li>No top items yet.</li>';
+                }
 
 
-    } catch (err) {
-        console.error("Failed to load analytics:", err);
-        document.querySelector('.analytics').innerHTML = `<p>Error loading analytics.</p>`;
-    }
-}
+            } catch (err) {
+                console.error("Failed to load analytics:", err);
+                document.querySelector('.analytics').innerHTML = `<p>Error loading analytics.</p>`;
+            }
+        }
 
         async function updateStatus(orderId, status) {
             await fetch('/dashboard/update-status', {
@@ -192,15 +215,39 @@ if (data.topItems.length) {
         };
 
         async function updateTotal(orderId, newTotal) {
-    await fetch('/dashboard/update-total', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId, total: parseFloat(newTotal) })
-    });
-    loadStats(); 
-    loadOrders(); 
-    loadAnalytics()
-}
+            await fetch('/dashboard/update-total', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId, total: parseFloat(newTotal) })
+            });
+            loadStats();
+            loadOrders();
+            loadAnalytics()
+        }
+
+        function showConfirmationPopup(header, message, onConfirm) {
+            document.getElementById("popup-header").innerText = header;
+            document.getElementById("popup-message").innerText = message;
+
+            const popup = document.getElementById("custom-popup");
+            popup.classList.add("show");
+
+            document.getElementById("popup-yes").onclick = function () {
+                closeConfirmationPopup();
+                if (typeof onConfirm === "function") {
+                    onConfirm();
+                }
+            };
+
+            document.getElementById("popup-no").onclick = closeConfirmationPopup;
+        }
+
+        // Close the confirmation popup
+        function closeConfirmationPopup() {
+            document.getElementById("custom-popup").classList.remove("show");
+        }
+
+
     </script>
 </body>
 
