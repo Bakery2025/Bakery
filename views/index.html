@@ -34,7 +34,7 @@
     </header>
 
     <!-- Hero Section with Slideshow Background -->
-    <section class="hero">
+    <section class="hero" style="background: url('images/slide1.webp') center/cover no-repeat;">
         <div class="hero-overlay">
             <h2>Welcome to Elicious Bakes!</h2>
             <p>
@@ -84,25 +84,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-
-        // Slide Background Images
-        const slides = [
-            "images/slide1.webp",
-        ];
-
-        let slideIndex = 0;
-
-        function changeBackground() {
-            document.querySelector(".hero").style.backgroundImage =
-                `url(${slides[slideIndex]})`;
-            slideIndex = (slideIndex + 1) % slides.length;
-        }
-
-        // Change background every 5 seconds
-        setInterval(changeBackground, 5000);
-
-        // Initial background load
-        document.addEventListener("DOMContentLoaded", changeBackground);
     </script>
 
     <footer>
