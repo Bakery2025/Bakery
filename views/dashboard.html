@@ -48,31 +48,19 @@
                     <tr>
                         <th>Order ID</th>
                         <th>Customer</th>
+                        <th>Order Status</th>
                         <th>Total Price</th>
-                        <th>Items</th> <!-- ✅ Added this header -->
+                        <th>Items</th>
+                        <th>Special Request</th>
                         <th>Allergies</th>
-                        <th>Change Status</th>
+                        <th>Delivery Type</th>
+                        <th>Delivery Date & Time</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Address</th>
                     </tr>
                 </thead>
                 <tbody id="order-table">
-
-                    <tr>
-                        <td data-label="Order ID">#1234</td>
-                        <td data-label="Customer">John Doe</td>
-                        <td data-label="Total">₹450</td>
-                        <td data-label="Items">3 Cakes</td>
-                        <td data-label="Allergies">₹450</td>
-                        <td data-label="Status">Pending</td>
-                    </tr>
-
-                    <tr>
-                        <td data-label="Order ID">#1234</td>
-                        <td data-label="Customer">John Doe</td>
-                        <td data-label="Total">₹450</td>
-                        <td data-label="Items">3 Cakes</td>
-                        <td data-label="Allergies">₹450</td>
-                        <td data-label="Status">Pending</td>
-                    </tr>
                 </tbody>
             </table>
         </section>
@@ -97,6 +85,29 @@
     </div>
 
     <script>
+
+function formatDateTime(dateString) {
+                            console.log("Raw date input:", dateString); // Debugging log
+
+                            const date = new Date(dateString); // Ensure JavaScript reads it correctly
+
+                            console.log("Parsed date:", date.toISOString()); // Debugging in UTC format
+
+                            // Convert to IST using toLocaleString
+                            const formattedDate = date.toLocaleString("en-IN", {
+                                timeZone: "Asia/Kolkata",
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                second: "2-digit",
+                                hour12: true // Ensures AM/PM format
+                            });
+
+                            console.log("Formatted date output:", formattedDate); // Final debug check
+                            return formattedDate;
+                        }
 
 document.getElementById("logout-button").addEventListener("click", () => {
     showConfirmationPopup(
@@ -142,15 +153,10 @@ document.getElementById("logout-button").addEventListener("click", () => {
 
                 return `
 <tr>
-    <td>${order.orderId}</td>
+   <td>${order.orderId}</td>
     <td>${order.name}</td>
-    <td>
-        ₹ <input type="number" value="${order.total}" min="0" 
-            style="width: 80px; padding: 4px; text-align: center;" 
-            onchange="updateTotal('${order.orderId}', this.value)" />
-    </td>
-    <td>${itemsDisplay}</td> <!-- ✅ This now aligns under "Items" -->
-    <td>${order.allergies?.trim() ? order.allergies : "None"}</td> <!-- ✅ Allergies aligns right -->
+
+    <!-- Order Status Dropdown -->
     <td>
         <select onchange="updateStatus('${order.orderId}', this.value)">
             <option ${order.orderStatus === 'Pending' ? 'selected' : ''} value="Pending">Pending</option>
@@ -158,6 +164,41 @@ document.getElementById("logout-button").addEventListener("click", () => {
             <option ${order.orderStatus === 'Cancelled' ? 'selected' : ''} value="Cancelled">Cancelled</option>
         </select>
     </td>
+
+    <!-- Total Price Field -->
+    <td>
+        ₹ <input type="number" value="${order.total || 0}" min="0" 
+            style="width: 80px; padding: 4px; text-align: center;" 
+            onchange="updateTotal('${order.orderId}', this.value)" />
+    </td>
+
+    <!-- Items Display (Read-Only) -->
+    <td>${itemsDisplay}</td>
+
+    <!-- Special Request -->
+    <td>${order.specialRequest || "None"}</td>
+
+    <!-- Allergies -->
+    <td>${order.allergies?.trim() || "None"}</td>
+
+    <!-- Delivery Type -->
+    <td>
+    <select onchange="updateDeliveryType('${order.orderId}', this.value)">
+        <option ${order.deliveryType === 'Pickup' ? 'selected' : ''} value="Pickup">Pickup</option>
+        <option ${order.deliveryType === 'Delivery' ? 'selected' : ''} value="Delivery">Delivery</option>
+    </select>
+</td>
+
+       <!-- Order Timestamp (Readable Format) -->
+   <td>${order.deliveryDateTime ? formatDateTime(order.deliveryDateTime) : "N/A"}</td>
+
+    <!-- Phone -->
+    <td>${order.phone || "N/A"}</td>
+
+    <td>${order.email || "N/A"}</td>
+
+    <!-- Address -->
+    <td>${order.address}</td>
 </tr>`;
 
             }).join('');
@@ -224,6 +265,18 @@ document.getElementById("logout-button").addEventListener("click", () => {
             loadOrders();
             loadAnalytics()
         }
+
+        async function updateDeliveryType(orderId, newDeliveryType) {
+    await fetch('/dashboard/update-delivery-type', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, deliveryType: newDeliveryType })
+    });
+    loadStats();
+    loadOrders();
+    loadAnalytics();
+}
+
 
         function showConfirmationPopup(header, message, onConfirm) {
             document.getElementById("popup-header").innerText = header;
