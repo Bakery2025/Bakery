@@ -611,7 +611,32 @@ h2, p {
         font-size: 2rem;
     }
 
+    #menu-list li {
+        position: relative;
+        transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s, /* 0.1s delay */
+                    box-shadow 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s, 
+                    background-color 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s;
+        border-radius: 10px;
+        padding: 16px 20px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 12px;
+        cursor: pointer;
+        will-change: transform, box-shadow, background-color; /* Performance boost */
+    }
 
+    #menu-list li:hover, #menu-list li:active {
+        background-color: #f4b6b6; /* Subtle color change */
+        transform: scale(1.05); /* Slight zoom effect */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Light shadow */
+    }
+
+    #menu-list li.active {
+        background-color: #f4b6b6;
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease; /* Smoother transition */
+    }
 
     .hero {
         width: 100%;  /* Ensures it takes up the full viewport width */
@@ -848,6 +873,7 @@ h2, p {
         margin-right:10px;
     }
     
+    
     @keyframes smooth-spin {
         0% { transform: rotate(0deg); }
         70% { transform: rotate(340deg); } /* Fast in the beginning */
@@ -933,6 +959,7 @@ ul {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     user-select: none;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 
@@ -1425,4 +1452,10 @@ option {
 #login-error {
     color: red;
     font-weight: bold;
+}
+
+#menu-list li:hover {
+    background-color: #f4b6b6;  /* Lighten the background on hover */
+    transform: scale(1.05);      /* Slight zoom effect */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
 }
