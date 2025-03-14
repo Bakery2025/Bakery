@@ -1558,8 +1558,8 @@ option {
 @media (max-width: 768px) {
 
     .menu-card {
-        flex: 1 1 calc(50% - 10px); /* Two cards per row, accounting for gap */
-        width: calc(50% - 5px);
+        flex: 1 1 calc(45% - 10px); /* Shrink width to ensure spacing fits */
+        max-width: calc(45% - 10px);
         background: #f8e1e1;
         border-radius: 10px;
         padding: 10px;
@@ -1568,6 +1568,7 @@ option {
         transition: 0.3s ease;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         cursor: pointer;
+        margin: 5px;
         box-sizing: border-box !important
     }
 
