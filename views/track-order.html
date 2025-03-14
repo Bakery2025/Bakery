@@ -197,7 +197,9 @@
 
                         // Add new fields
                         updateField(
-                            "totalPrice",`₹${data.total}` || "N/A",);
+    "totalPrice", data.total !== undefined ? `₹${data.total}` : "Not yet updated"
+);
+
                         updateField("allergies", data.allergies || "None");
                         updateField(
                             "paymentMethod",
