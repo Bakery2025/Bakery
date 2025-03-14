@@ -622,7 +622,7 @@ h2, p {
     /* Card styling */
     .menu-card {
         flex: 1 1 calc(50% - 10px); /* Two cards per row, accounting for gap */
-        max-width: 200px;
+        width: calc(50% - 5px);
         background-color: #FAECEC;
         border-radius: 10px;
         padding: 10px;
@@ -630,6 +630,15 @@ h2, p {
         transition: 0.3s ease;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         cursor: pointer;
+        box-sizing: border-box;
+    }
+
+    .menu-category {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        padding: 10px 0;
     }
 
     #menu-list li {
@@ -1487,7 +1496,7 @@ option {
 }
 
 .menu-card {
-    background: #faecec;
+    background: #f8e1e1;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 15px;
@@ -1504,7 +1513,7 @@ option {
 
 .menu-card.selected {
     border: 2px solid #F7A8A8;
-    background-color: #FCE4E4;
+    background-color: #f2d8d8;
     transform: translateY(-5px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
@@ -1542,6 +1551,7 @@ option {
     flex-wrap: wrap;
     justify-content: center;
     gap: 15px;
+    padding: 10px 0;
 }
 
 #selected-counter {
