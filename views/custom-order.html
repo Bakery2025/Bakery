@@ -158,6 +158,11 @@
             defaultDate: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
 
             minuteIncrement: 1,
+
+            onClose: function(selectedDates, dateStr, instance) {
+        const dateInIST = new Date(selectedDates[0]).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+        document.getElementById("deliveryDateTime").value = dateInIST; 
+    },
             
             onReady: function (selectedDates, dateStr, instance) {
                 instance.calendarContainer.style.left = "-35px";
