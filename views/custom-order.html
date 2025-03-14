@@ -159,9 +159,9 @@
 
             minuteIncrement: 1,
 
-            onClose: function(selectedDates, dateStr, instance) {
-        const dateInIST = new Date(selectedDates[0]).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
-        document.getElementById("deliveryDateTime").value = dateInIST; 
+           onClose: function (selectedDates, dateStr, instance) {
+        const isoTime = selectedDates[0].toISOString();
+        document.getElementById("deliveryDateTime").value = isoTime; // Save ISO 8601 UTC format
     },
             
             onReady: function (selectedDates, dateStr, instance) {
