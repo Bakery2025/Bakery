@@ -156,6 +156,9 @@
             static: true,
             disableMobile: true,
             defaultDate: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+
+            minuteIncrement: 1,
+            
             onReady: function (selectedDates, dateStr, instance) {
                 instance.calendarContainer.style.left = "-35px";
                 instance.calendarContainer.style.right = "auto";
