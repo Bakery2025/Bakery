@@ -103,6 +103,9 @@ app.get('/quiz', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'quiz.html'));
 });
 
+app.get("/sitemap.xml", (req, res) => {
+    res.sendFile(path.join(__dirname, "sitemap.xml"));
+});
 
 app.post('/submit-checkout', async (req, res) => {
     const { name, phone, address, email, items, total, specialRequest, allergies, deliveryType, deliveryDateTimeISO } = req.body;
