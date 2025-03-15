@@ -111,6 +111,20 @@ app.post('/submit-checkout', async (req, res) => {
     console.log("Raw deliveryDateTime from frontend:", req.body.deliveryDateTimeISO);
     const deliveryDateUTC = new Date(deliveryDateTimeISO) || null;
     console.log(deliveryDateUTC)
+
+    const options = {
+        timeZone: 'Asia/Kolkata',
+        hour12: true,
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    };
+
+    const deliveryDateIST = deliveryDateUTC.toLocaleString('en-IN', options);
+
     const newOrder = new Order({
         orderId,
         name,
@@ -226,7 +240,7 @@ app.post('/submit-checkout', async (req, res) => {
                             <tr>
 
                                 <th>Delivery/Pickup Date & Time</th>
-                                <td>${deliveryDateUTC}</td>
+                                <td>${deliveryDateIST}</td>
                             </tr>
                             <tr>
                                 <th>Items</th>
@@ -365,7 +379,7 @@ app.post('/submit-checkout', async (req, res) => {
                             <tr>
 
                                 <th>Delivery/Pickup Date & Time</th>
-                                <td>${deliveryDateUTC}</td>
+                                <td>${deliveryDateIST}</td>
                             </tr>
                                  <tr>
                                 <th>Items</th>
@@ -413,6 +427,19 @@ app.post('/submit-order', async (req, res) => {
     const orderId = crypto.randomBytes(5).toString('hex'); // Generates a random 10-character order ID
     console.log("Raw deliveryDateTime from frontend:", req.body.deliveryDateTimeISO);
     const deliveryDateUTC = new Date(deliveryDateTimeISO) || null;
+
+    const options = {
+        timeZone: 'Asia/Kolkata',
+        hour12: true,
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    };
+    const deliveryDateIST = deliveryDateUTC.toLocaleString('en-IN', options);
+
     console.log(deliveryDateUTC)
     const newOrder = new Order({
         orderId,
@@ -528,7 +555,7 @@ app.post('/submit-order', async (req, res) => {
                             <tr>
 
                                 <th>Delivery/Pickup Date & Time</th>
-                                <td>${deliveryDateUTC}</td>
+                                <td>${deliveryDateIST}</td>
                             </tr>
                             <tr>
                                 <th>Items</th>
@@ -650,7 +677,7 @@ app.post('/submit-order', async (req, res) => {
                             <tr>
 
                                 <th>Delivery/Pickup Date & Time</th>
-                                <td>${deliveryDateUTC}</td>
+                                <td>${deliveryDateIST}</td>
                             </tr>
                                 <tr>
                                     <th>Items</th>
