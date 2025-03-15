@@ -143,14 +143,13 @@
             minuteIncrement: 1,
 
             onClose: function (selectedDates, dateStr, instance) {
-                if (selectedDates.length > 0) {
-                    const selectedDate = selectedDates[0];
+    if (selectedDates.length > 0) {
+        const selectedDate = selectedDates[0];
 
-                    // Save as ISO 8601 UTC format
-                    document.getElementById("deliveryDateTime").dataset.iso = selectedDate.toISOString()
-                 
-                }
-            },
+        // Convert to ISO format before sending to backend
+        document.getElementById("deliveryDateTime").value = selectedDate.toISOString();
+    }
+}
 
             onReady: function (selectedDates, dateStr, instance) {
                 instance.calendarContainer.style.left = "-35px";
