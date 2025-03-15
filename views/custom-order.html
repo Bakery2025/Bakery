@@ -142,6 +142,17 @@
 
             minuteIncrement: 1,
 
+            onReady: function (selectedDates, dateStr, instance) {
+        if (selectedDates.length > 0) {
+            document.getElementById("deliveryDateTime").value = selectedDates[0].toISOString();
+        }
+    },
+
+            onChange: function (selectedDates, dateStr, instance) {
+        if (selectedDates.length > 0) {
+            document.getElementById("deliveryDateTime").value = selectedDates[0].toISOString();
+        }
+    },
     
                 onClose: function (selectedDates, dateStr, instance) {
                 if (selectedDates.length > 0) {
