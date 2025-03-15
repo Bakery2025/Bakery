@@ -108,6 +108,7 @@ app.post('/submit-checkout', async (req, res) => {
     // console.log("Received Checkout Data:", req.body);
     const { name, phone, address, email, items, total, specialRequest, allergies, deliveryType, deliveryDateTime } = req.body;
     const orderId = crypto.randomBytes(5).toString('hex'); // Generates a random 10-character order ID
+    const deliveryDateUTC = new Date(deliveryDateTime) || null;
     const newOrder = new Order({
         orderId,
         name,
@@ -121,7 +122,7 @@ app.post('/submit-checkout', async (req, res) => {
         orderType: "Regular",
         paymentMethod: "Cash",
         deliveryType,
-        deliveryDateTime
+        deliveryDateTime: deliveryDateUTC,
     });
     await newOrder.save();
 
@@ -408,7 +409,7 @@ app.post('/submit-checkout', async (req, res) => {
 app.post('/submit-order', async (req, res) => {
     const { name, phone, address, email, items, specialRequest, allergies, deliveryType, deliveryDateTime } = req.body;
     const orderId = crypto.randomBytes(5).toString('hex'); // Generates a random 10-character order ID
-
+    const deliveryDateUTC = new Date(deliveryDateTime) || null;
     const newOrder = new Order({
         orderId,
         name,
@@ -421,7 +422,7 @@ app.post('/submit-order', async (req, res) => {
         orderType: "Custom",
         paymentMethod: "Cash",
         deliveryType,
-        deliveryDateTime
+        deliveryDateTime: deliveryDateUTC
     });
     await newOrder.save();
 
