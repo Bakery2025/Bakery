@@ -66,7 +66,9 @@
             </select>
 
             <label id="dateTimeLabel" for="deliveryDateTime">Select Delivery Date & Time:</label>
-            <input type="text" id="deliveryDateTime" name="deliveryDateTime" required />
+<input type="text" id="deliveryDateTime" name="deliveryDateTime" required />
+<input type="hidden" id="deliveryDateTimeISO" name="deliveryDateTimeISO" /> <!-- Hidden input -->
+
 
             <label for="items">Order Details:</label>
             <textarea id="items" name="items" maxlength="200"
@@ -133,42 +135,70 @@
         }
 
         flatpickr("#deliveryDateTime", {
-            enableTime: true,
-            minDate: "today",
-            maxDate: new Date().fp_incr(15),
-            static: true,
-            disableMobile: true,
-            defaultDate: new Date(),
+    enableTime: true,
+    minDate: "today",
+    maxDate: new Date().fp_incr(15),
+    static: true,
+    disableMobile: true,
+    defaultDate: new Date(),
+    minuteIncrement: 1,
 
-            minuteIncrement: 1,
-
-            onChange: function (selectedDates, dateStr, instance) {
+    onReady: function (selectedDates, dateStr, instance) {
         if (selectedDates.length > 0) {
-            document.getElementById("deliveryDateTime").value = selectedDates[0].toISOString();
+            const selectedDate = selectedDates[0];
+
+            // ✅ Save as ISO format in hidden field for form submission
+            document.getElementById("deliveryDateTimeISO").value = selectedDate.toISOString();
+            
+            // ✅ Show IST format in visible field for users
+            document.getElementById("deliveryDateTime").value = selectedDate.toLocaleString("en-IN", {
+                timeZone: "Asia/Kolkata",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
         }
     },
-    
-                onClose: function (selectedDates, dateStr, instance) {
-                if (selectedDates.length > 0) {
-                    const selectedDate = selectedDates[0];
 
-                    // Save as ISO 8601 UTC format
-                    document.getElementById("deliveryDateTime").value = selectedDate.toISOString();
-                    
-                 
-                }
-            },
-
-             onReady: function (selectedDates, dateStr, instance) {
+    onChange: function (selectedDates, dateStr, instance) {
         if (selectedDates.length > 0) {
-            document.getElementById("deliveryDateTime").value = selectedDates[0].toISOString();
-        }
+            const selectedDate = selectedDates[0];
 
-        // Adjust calendar position
-        instance.calendarContainer.style.left = "-35px";
-        instance.calendarContainer.style.right = "auto";
+            // ✅ Save as ISO format in hidden field for form submission
+            document.getElementById("deliveryDateTimeISO").value = selectedDate.toISOString();
+            
+            // ✅ Show IST format in visible field for users
+            document.getElementById("deliveryDateTime").value = selectedDate.toLocaleString("en-IN", {
+                timeZone: "Asia/Kolkata",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
     },
 
+    onClose: function (selectedDates, dateStr, instance) {
+        if (selectedDates.length > 0) {
+            const selectedDate = selectedDates[0];
+
+            // ✅ Save as ISO format in hidden field for form submission
+            document.getElementById("deliveryDateTimeISO").value = selectedDate.toISOString();
+            
+            // ✅ Show IST format in visible field for users
+            document.getElementById("deliveryDateTime").value = selectedDate.toLocaleString("en-IN", {
+                timeZone: "Asia/Kolkata",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+    },
             onOpen: function (selectedDates, dateStr, instance) {
                 instance.calendarContainer.style.left = "-35px";
                 instance.calendarContainer.style.right = "auto";
