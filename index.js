@@ -409,7 +409,9 @@ app.post('/submit-checkout', async (req, res) => {
 app.post('/submit-order', async (req, res) => {
     const { name, phone, address, email, items, specialRequest, allergies, deliveryType, deliveryDateTime } = req.body;
     const orderId = crypto.randomBytes(5).toString('hex'); // Generates a random 10-character order ID
+    console.log("Raw deliveryDateTime from frontend:", req.body.deliveryDateTime);
     const deliveryDateUTC = new Date(deliveryDateTime) || null;
+    console.log("Updated deliveryDateTime":, deliveryDateUTC)
     const newOrder = new Order({
         orderId,
         name,
