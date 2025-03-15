@@ -142,12 +142,6 @@
 
             minuteIncrement: 1,
 
-            onReady: function (selectedDates, dateStr, instance) {
-        if (selectedDates.length > 0) {
-            document.getElementById("deliveryDateTime").value = selectedDates[0].toISOString();
-        }
-    },
-
             onChange: function (selectedDates, dateStr, instance) {
         if (selectedDates.length > 0) {
             document.getElementById("deliveryDateTime").value = selectedDates[0].toISOString();
@@ -165,10 +159,16 @@
                 }
             },
 
-            onReady: function (selectedDates, dateStr, instance) {
-                instance.calendarContainer.style.left = "-35px";
-                instance.calendarContainer.style.right = "auto";
-            },
+             onReady: function (selectedDates, dateStr, instance) {
+        if (selectedDates.length > 0) {
+            document.getElementById("deliveryDateTime").value = selectedDates[0].toISOString();
+        }
+
+        // Adjust calendar position
+        instance.calendarContainer.style.left = "-35px";
+        instance.calendarContainer.style.right = "auto";
+    },
+
             onOpen: function (selectedDates, dateStr, instance) {
                 instance.calendarContainer.style.left = "-35px";
                 instance.calendarContainer.style.right = "auto";
