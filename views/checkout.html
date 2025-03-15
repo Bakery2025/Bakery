@@ -96,6 +96,7 @@
 
             <label id="dateTimeLabel" for="deliveryDateTime">Select Delivery Date & Time:</label>
             <input type="text" id="deliveryDateTime" name="deliveryDateTime" required />
+            <input type="hidden" id="deliveryDateTimeISO" name="deliveryDateTimeISO" /> <!-- Hidden input -->
 
             <label for="specialRequest">Special Requests:</label>
             <textarea id="specialRequest" placeholder="Red gift wrap, custom messages, frosting color..."
@@ -131,46 +132,71 @@
             document.getElementById("custom-popup").classList.remove("show");
         }
 
-
         flatpickr("#deliveryDateTime", {
-            enableTime: true,
-            minDate: "today",
-            maxDate: new Date().fp_incr(15),
-            static: true,
-            disableMobile: true,
-            defaultDate: new Date(),
+    enableTime: true,
+    minDate: "today",
+    maxDate: new Date().fp_incr(15),
+    static: true,
+    disableMobile: true,
+    defaultDate: new Date(),
+    minuteIncrement: 1,
 
-            minuteIncrement: 1,
+    onReady: function (selectedDates, dateStr, instance) {
+        if (selectedDates.length > 0) {
+            const selectedDate = selectedDates[0];
 
-            onClose: function (selectedDates, dateStr, instance) {
-                if (selectedDates.length > 0) {
-                    const selectedDate = selectedDates[0];
-
-                    // Save as ISO 8601 UTC format
-                    document.getElementById("deliveryDateTime").dataset.iso = selectedDate.toISOString();
-
-                    // Display the date in IST format for users
-                    const istDate = new Date(selectedDate.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
-                    const formattedIST = istDate.toLocaleString("en-IN", {
-                        weekday: "short",
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: true,
-                        timeZone: "Asia/Kolkata",
-                    });
-
-                    document.getElementById("deliveryDateTime").value = formattedIST;
-                }
-            },
-        
+            // ✅ Save as ISO format in hidden field for form submission
+            document.getElementById("deliveryDateTimeISO").value = selectedDate.toISOString();
             
-            onReady: function (selectedDates, dateStr, instance) {
-                instance.calendarContainer.style.left = "-35px";
-                instance.calendarContainer.style.right = "auto";
-            },
+            // ✅ Show IST format in visible field for users
+            document.getElementById("deliveryDateTime").value = selectedDate.toLocaleString("en-IN", {
+                timeZone: "Asia/Kolkata",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+    },
+
+    onChange: function (selectedDates, dateStr, instance) {
+        if (selectedDates.length > 0) {
+            const selectedDate = selectedDates[0];
+
+            // ✅ Save as ISO format in hidden field for form submission
+            document.getElementById("deliveryDateTimeISO").value = selectedDate.toISOString();
+            
+            // ✅ Show IST format in visible field for users
+            document.getElementById("deliveryDateTime").value = selectedDate.toLocaleString("en-IN", {
+                timeZone: "Asia/Kolkata",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+    },
+
+    onClose: function (selectedDates, dateStr, instance) {
+        if (selectedDates.length > 0) {
+            const selectedDate = selectedDates[0];
+
+            // ✅ Save as ISO format in hidden field for form submission
+            document.getElementById("deliveryDateTimeISO").value = selectedDate.toISOString();
+            
+            // ✅ Show IST format in visible field for users
+            document.getElementById("deliveryDateTime").value = selectedDate.toLocaleString("en-IN", {
+                timeZone: "Asia/Kolkata",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+    },
             onOpen: function (selectedDates, dateStr, instance) {
                 instance.calendarContainer.style.left = "-35px";
                 instance.calendarContainer.style.right = "auto";
@@ -307,7 +333,7 @@
                             email: document.getElementById("email").value,
                             address: document.getElementById("address").value,
                             deliveryType: document.getElementById("deliveryType").value,
-                            deliveryDateTime: document.getElementById("deliveryDateTime").value,
+                            deliveryDateTimeISO: document.getElementById("deliveryDateTimeISO").value,
                             specialRequest:
                                 document.getElementById("specialRequest").value,
                             allergies:
