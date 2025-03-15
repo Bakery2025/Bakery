@@ -108,7 +108,9 @@ app.post('/submit-checkout', async (req, res) => {
     // console.log("Received Checkout Data:", req.body);
     const { name, phone, address, email, items, total, specialRequest, allergies, deliveryType, deliveryDateTimeISO } = req.body;
     const orderId = crypto.randomBytes(5).toString('hex'); // Generates a random 10-character order ID
+    console.log("Raw deliveryDateTime from frontend:", req.body.deliveryDateTimeISO);
     const deliveryDateUTC = new Date(deliveryDateTimeISO) || null;
+    console.log(deliveryDateUTC)
     const newOrder = new Order({
         orderId,
         name,
@@ -122,7 +124,7 @@ app.post('/submit-checkout', async (req, res) => {
         orderType: "Regular",
         paymentMethod: "Cash",
         deliveryType,
-        deliveryDateTime: deliveryDateUTC,
+        deliveryDateTime: deliveryDateUTC
     });
     await newOrder.save();
 
@@ -409,9 +411,9 @@ app.post('/submit-checkout', async (req, res) => {
 app.post('/submit-order', async (req, res) => {
     const { name, phone, address, email, items, specialRequest, allergies, deliveryType, deliveryDateTimeISO } = req.body;
     const orderId = crypto.randomBytes(5).toString('hex'); // Generates a random 10-character order ID
-    console.log("Raw deliveryDateTime from frontend:", req.body.deliveryDateTime);
+    console.log("Raw deliveryDateTime from frontend:", req.body.deliveryDateTimeISO);
     const deliveryDateUTC = new Date(deliveryDateTimeISO) || null;
-    console.log("Updated deliveryDateTime:", deliveryDateUTC)
+    console.log(deliveryDateUTC)
     const newOrder = new Order({
         orderId,
         name,
@@ -859,7 +861,7 @@ app.get('/dashboard/analytics', async (req, res) => {
         // ✅ Count revenue & total orders
         const totalRevenue = validOrders.reduce((acc, order) => acc + (parseFloat(order.total) || 0), 0);
         const totalOrders = allOrders.length;
-        
+
         // ✅ Track Pending & Completed orders
         const orderStatusCount = {
             Pending: allOrders.filter(order => order.orderStatus === 'Pending').length,
@@ -901,4 +903,3 @@ app.get('/dashboard/analytics', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
-
