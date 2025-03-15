@@ -226,7 +226,7 @@ app.post('/submit-checkout', async (req, res) => {
                             <tr>
 
                                 <th>Delivery/Pickup Date & Time</th>
-                                <td>${newOrder.deliveryDateTime}</td>
+                                <td>${deliveryDateUTC}</td>
                             </tr>
                             <tr>
                                 <th>Items</th>
@@ -365,7 +365,7 @@ app.post('/submit-checkout', async (req, res) => {
                             <tr>
 
                                 <th>Delivery/Pickup Date & Time</th>
-                                <td>${newOrder.deliveryDateTime}</td>
+                                <td>${deliveryDateUTC}</td>
                             </tr>
                                  <tr>
                                 <th>Items</th>
@@ -528,7 +528,7 @@ app.post('/submit-order', async (req, res) => {
                             <tr>
 
                                 <th>Delivery/Pickup Date & Time</th>
-                                <td>${newOrder.deliveryDateTime}</td>
+                                <td>${deliveryDateUTC}</td>
                             </tr>
                             <tr>
                                 <th>Items</th>
@@ -650,7 +650,7 @@ app.post('/submit-order', async (req, res) => {
                             <tr>
 
                                 <th>Delivery/Pickup Date & Time</th>
-                                <td>${newOrder.deliveryDateTime}</td>
+                                <td>${deliveryDateUTC}</td>
                             </tr>
                                 <tr>
                                     <th>Items</th>
