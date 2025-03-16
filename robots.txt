@@ -4,3 +4,5 @@ Disallow: /about
 Disallow: /menu
 Disallow: /custom-order
 Disallow: /track-order
+
+Sitemap: https://eliciousbakes.in/sitemap.xml
