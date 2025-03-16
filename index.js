@@ -54,6 +54,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
+app.get("/robots.txt", (req, res) => {
+    res.type("text/plain");
+    res.sendFile(path.join(__dirname, "robots.txt"));
+});
+
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'admin.html'));
 });
