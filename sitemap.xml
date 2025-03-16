@@ -4,20 +4,4 @@
       <loc>https://eliciousbakes.in/</loc>
       <priority>1.0</priority>
    </url>
-   <url>
-      <loc>https://eliciousbakes.in/menu</loc>
-      <priority>0.8</priority>
-   </url>
-   <url>
-      <loc>https://eliciousbakes.in/custom-order</loc>
-      <priority>0.8</priority>
-   </url>
-   <url>
-      <loc>https://eliciousbakes.in/about</loc>
-      <priority>0.8</priority>
-   </url>
-   <url>
-      <loc>https://eliciousbakes.in/track-order</loc>
-      <priority>0.7</priority>
-   </url>
 </urlset>
