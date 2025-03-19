@@ -379,16 +379,6 @@
                     }
                 });
         });
-
-        window.onerror = function (msg, url, lineNo, columnNo, error) {
-    const errorMsg = `${msg} at ${url}:${lineNo}:${columnNo}`;
-    const consoleDiv = document.createElement('div');
-    consoleDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:#ffcccc;color:#000;padding:10px;z-index:9999;';
-    consoleDiv.innerHTML = `<strong>Error:</strong> ${errorMsg}`;
-    document.body.appendChild(consoleDiv);
-    return false;
-};
-
     </script>
     <footer>
         <p>&copy; 2025 Elicious Bakes. All rights reserved.</p>
