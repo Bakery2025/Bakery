@@ -1576,7 +1576,7 @@ option {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 20px !important;
+        gap: 5px !important;
     }
     
 }
