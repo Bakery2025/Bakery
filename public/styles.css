@@ -1,8 +1,4 @@
 /* public/style.css */
-:root {
-    color-scheme: light only;
-}
-
 @font-face {
     font-family: 'Apple Chancery';
     src: url('/fonts/AppleChancery.woff2') format('woff2'),
