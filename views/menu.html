@@ -49,7 +49,7 @@
                 <div id="menu-list"></div>
             </div>
             <div style="height: 10px"></div>
-            <button onclick="checkoutOrder()" class="checkout-btn">
+            <button onclick="checkoutOrder()" class="checkout-btn" id="checkout-btn">
                 Checkout
             </button>
         </section>
@@ -75,7 +75,7 @@
     { category: "🍕 Pizzas", name: "Cheese & Corn Pizza", price: 100, description: "A cheesy delight topped with sweet corn and seasonings." },
     { category: "🍕 Pizzas", name: "Farm Fresh Pizza", price: 250, description: "Topped with bell peppers, onions, olives, and fresh herbs." },
     { category: "🍕 Pizzas", name: "Delight Pizza", price: 220, description: "A delightful mix of veggies, cheese, and classic pizza sauce." },
-    { category: "🍕 Pizzas", name: "Veg. Mexicana Pizza", price: 240, description: "Mexican-style pizza with jalapeños, onions, and spicy sauce." },
+    { category: "🍕 Pizzas", name: "Veg. Maxicana Pizza", price: 240, description: "Mexican-style pizza with jalapeños, onions, and spicy sauce." },
     { category: "🍕 Pizzas", name: "Capsicum Onion Pizza", price: 110, description: "Simple yet flavorful pizza with capsicum, onions, and cheese." },
     { category: "🍕 Pizzas", name: "Mix Veg. Pizza", price: 270, description: "Loaded with a variety of veggies, cheese, and oregano." },
 
@@ -190,6 +190,15 @@ function showPopup(header, message) {
 function closeOkPopup() {
     document.getElementById("custom-popup-ok").classList.remove("show");
 }
+
+document.getElementById('checkout-btn').addEventListener('click', (e) => {
+    console.log('Button clicked:', e.target);
+    console.log('Disabled:', e.target.disabled);
+    console.log('Visibility:', window.getComputedStyle(e.target).display);
+    console.log('Opacity:', window.getComputedStyle(e.target).opacity);
+    console.log('Pointer events:', window.getComputedStyle(e.target)['pointer-events']);
+});
+
 
 // Load menu when page loads
 document.addEventListener("DOMContentLoaded", renderMenu);
