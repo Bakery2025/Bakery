@@ -73,7 +73,6 @@ app.use(async (req, res, next) => {
 
         try {
             await visit.save();
-            console.log('New visit logged:', visit);
         } catch (error) {
             console.error('Failed to log visit:', error);
         }
