@@ -55,6 +55,34 @@ const visitSchema = new mongoose.Schema({
 
 const Visit = mongoose.model('Visit', visitSchema);
 
+// Middleware to log visit
+app.use(async (req, res, next) => {
+    if (req.path === '/') {  // Log only on the main page load
+        const parser = new UAParser(req.headers['user-agent']);
+        const userDevice = parser.getResult();
+
+        const visit = new Visit({
+            timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
+            ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+            browser: `${userDevice.browser.name} ${userDevice.browser.version}`,
+            os: `${userDevice.os.name} ${userDevice.os.version}`,
+            device: userDevice.device.model 
+                ? `${userDevice.device.vendor} ${userDevice.device.model}`
+                : 'Desktop'
+        });
+
+        try {
+            await visit.save();
+            console.log('New visit logged:', visit);
+        } catch (error) {
+            console.error('Failed to log visit:', error);
+        }
+    }
+
+    next();
+});
+
+
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -69,6 +97,8 @@ app.get("/robots.txt", (req, res) => {
     res.type("text/plain");
     res.sendFile(path.join(__dirname, "robots.txt"));
 });
+
+app.use("/favicon.ico", express.static(path.join(__dirname, "favicon.ico")));
 
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'admin.html'));
@@ -123,37 +153,13 @@ app.get("/sitemap.xml", (req, res) => {
     res.sendFile(path.join(__dirname, "sitemap.xml"));
 });
 
-// Middleware to log visit
-app.use(async (req, res, next) => {
-    if (req.path === '/') {  // Log only on the main page load
-        const parser = new UAParser(req.headers['user-agent']);
-        const userDevice = parser.getResult();
-
-        const visit = new Visit({
-            timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
-            ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-            browser: `${userDevice.browser.name} ${userDevice.browser.version}`,
-            os: `${userDevice.os.name} ${userDevice.os.version}`,
-            device: userDevice.device.model 
-                ? `${userDevice.device.vendor} ${userDevice.device.model}`
-                : 'Desktop'
-        });
-
-        try {
-            await visit.save();
-            console.log('New visit logged:', visit);
-        } catch (error) {
-            console.error('Failed to log visit:', error);
-        }
-    }
-
-    next();
-});
-
 app.post('/submit-checkout', async (req, res) => {
+    // console.log("Received Checkout Data:", req.body);
     const { name, phone, address, email, items, total, specialRequest, allergies, deliveryType, deliveryDateTimeISO } = req.body;
     const orderId = crypto.randomBytes(5).toString('hex'); // Generates a random 10-character order ID
+    console.log("Raw deliveryDateTime from frontend:", req.body.deliveryDateTimeISO);
     const deliveryDateUTC = new Date(deliveryDateTimeISO) || null;
+    console.log(deliveryDateUTC)
 
     const options = {
         timeZone: 'Asia/Kolkata',
@@ -468,6 +474,7 @@ app.post('/submit-checkout', async (req, res) => {
 app.post('/submit-order', async (req, res) => {
     const { name, phone, address, email, items, specialRequest, allergies, deliveryType, deliveryDateTimeISO } = req.body;
     const orderId = crypto.randomBytes(5).toString('hex'); // Generates a random 10-character order ID
+    console.log("Raw deliveryDateTime from frontend:", req.body.deliveryDateTimeISO);
     const deliveryDateUTC = new Date(deliveryDateTimeISO) || null;
 
     const options = {
