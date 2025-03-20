@@ -4,6 +4,8 @@ const path = require('path');
 const mongoose = require('mongoose')
 const crypto = require('crypto');
 const nodemailer = require('nodemailer')
+const UAParser = require('ua-parser-js');
+const moment = require('moment')
 
 const app = express();
 const PORT = 3000;
@@ -43,6 +45,15 @@ const adminSchema = new mongoose.Schema({
 
 module.exports = mongoose.model('Admin', adminSchema);
 
+const visitSchema = new mongoose.Schema({
+    timestamp: { type: String, required: true },
+    ip: { type: String, required: true },
+    browser: { type: String, required: true },
+    os: { type: String, required: true },
+    device: { type: String, default: "Desktop" } // Defaults to Desktop if no device model detected
+});
+
+const Visit = mongoose.model('Visit', visitSchema);
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -110,6 +121,33 @@ app.get('/quiz', (req, res) => {
 
 app.get("/sitemap.xml", (req, res) => {
     res.sendFile(path.join(__dirname, "sitemap.xml"));
+});
+
+// Middleware to log visit
+app.use(async (req, res, next) => {
+    if (req.path === '/') {  // Log only on the main page load
+        const parser = new UAParser(req.headers['user-agent']);
+        const userDevice = parser.getResult();
+
+        const visit = new Visit({
+            timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
+            ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+            browser: `${userDevice.browser.name} ${userDevice.browser.version}`,
+            os: `${userDevice.os.name} ${userDevice.os.version}`,
+            device: userDevice.device.model 
+                ? `${userDevice.device.vendor} ${userDevice.device.model}`
+                : 'Desktop'
+        });
+
+        try {
+            await visit.save();
+            console.log('New visit logged:', visit);
+        } catch (error) {
+            console.error('Failed to log visit:', error);
+        }
+    }
+
+    next();
 });
 
 app.post('/submit-checkout', async (req, res) => {
