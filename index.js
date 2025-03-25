@@ -7,6 +7,9 @@ const nodemailer = require('nodemailer')
 const UAParser = require('ua-parser-js');
 const moment = require('moment')
 
+const ADMIN_USERNAME = "elibakes";
+const ADMIN_PASSWORD = "elibeli";
+
 const app = express();
 const PORT = 3000;
 
@@ -58,32 +61,29 @@ const Visit = mongoose.model('Visit', visitSchema);
 // Middleware to log visit
 app.use(async (req, res, next) => {
     const userAgent = req.headers['user-agent'];
-
-    // Skip logging for UptimeRobot or other known bots
-    if (userAgent && /UptimeRobot|Pingdom|StatusCake/i.test(userAgent)) {
-        return next();
+    if (userAgent && userAgent.includes("UptimeRobot")) {
+        return next();  // Skip logging
     }
 
-    // Log only on the main page load
-    if (req.path === '/') {
-        const parser = new UAParser(userAgent);
+    if (req.path === '/') {  // Log only on the main page load
+        const parser = new UAParser(req.headers['user-agent']);
         const userDevice = parser.getResult();
 
         const visit = new Visit({
             timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
             ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-            browser: `${userDevice.browser.name || 'Unknown'} ${userDevice.browser.version || ''}`,
-            os: `${userDevice.os.name || 'Unknown'} ${userDevice.os.version || ''}`,
+            browser: `${userDevice.browser.name} ${userDevice.browser.version}`,
+            os: `${userDevice.os.name} ${userDevice.os.version}`,
             device: userDevice.device.model 
-                ? `${userDevice.device.vendor || 'Unknown'} ${userDevice.device.model}`
+                ? `${userDevice.device.vendor} ${userDevice.device.model}`
                 : 'Desktop'
         });
 
         try {
             await visit.save();
-            console.log('✅ New visit logged:', visit);
+            console.log('New visit logged:', visit);
         } catch (error) {
-            console.error('❌ Failed to log visit:', error);
+            console.error('Failed to log visit:', error);
         }
     }
 
@@ -112,8 +112,21 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'admin.html'));
 });
 
-app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
+app.post("/admin/login", (req, res) => {
+    const { username, password } = req.body;
+
+    const ADMIN_USERNAME = "elibakes";
+    const ADMIN_PASSWORD = "elibeli";
+
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        return res.json({ success: true });
+    }
+
+    res.status(401).json({ success: false, message: "Invalid credentials" });
+});
+
+app.get("/dashboard", (req, res) => {
+    res.sendFile(path.join(__dirname, "views", "dashboard.html"));
 });
 
 
