@@ -66,37 +66,44 @@
     </section>
 
     <script>
-        // Credentials
-        const ADMIN_USERNAME = "elibakes";
-        const ADMIN_PASSWORD = "elibeli";
-
         // Redirect if already logged in
         if (localStorage.getItem("adminLoggedIn") === "true") {
             window.location.href = "/dashboard";
         }
-
+    
         // Login button event
-        document.getElementById("login-button").addEventListener("click", (e) => {
+        document.getElementById("login-button").addEventListener("click", async (e) => {
             e.preventDefault();
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
-
-            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-                localStorage.setItem("adminLoggedIn", "true");
-                setTimeout(() => {
+    
+            try {
+                const response = await fetch("/admin/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password }),
+                });
+    
+                const data = await response.json();
+    
+                if (data.success) {
+                    localStorage.setItem("adminLoggedIn", "true");
                     window.location.href = "/dashboard";
-                }, 200);
-            } else {
+                } else {
+                    document.getElementById("login-error").style.display = "block";
+                }
+            } catch (error) {
+                console.error("Login failed:", error);
                 document.getElementById("login-error").style.display = "block";
             }
         });
-
+    
         // Password toggle with SVG icon swap
         document.getElementById("togglePassword").addEventListener("click", () => {
             const passwordField = document.getElementById("password");
             const eyeOpen = document.getElementById("eyeOpen");
             const eyeClosed = document.getElementById("eyeClosed");
-
+    
             if (passwordField.type === "password") {
                 passwordField.type = "text";
                 eyeOpen.style.display = "none";
@@ -108,6 +115,7 @@
             }
         });
     </script>
+    
 
 </body>
 
