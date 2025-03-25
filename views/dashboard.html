@@ -86,6 +86,10 @@
 
     <script>
 
+if (localStorage.getItem("adminLoggedIn") !== "true") {
+        window.location.href = "/admin";
+    }
+
 function formatDateTime(dateString) {
                             console.log("Raw date input:", dateString); // Debugging log
 
