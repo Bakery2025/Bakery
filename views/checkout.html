@@ -244,10 +244,8 @@
                 let discount = 0;
 
                 // Apply discounts based on subtotal
-                if (subtotal > 1500) {
-                    discount = subtotal * 0.15; // 15% discount
-                } else if (subtotal > 1000) {
-                    discount = subtotal * 0.10; // 10% discount
+                if (subtotal > 1000) {
+                    discount = subtotal * 0.05; // 5% discount
                 }
 
                 let finalTotal = subtotal - discount; // Calculate final total after discount
