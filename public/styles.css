@@ -1555,6 +1555,13 @@ option {
     background: #ff5c5c;
 }
 
+.menu-card img {
+    width: 100%;
+    height: 140px; /* Fixed height for all images */
+    object-fit: cover; /* Ensures proportional image scaling */
+    border-radius: 8px;
+}
+
 @media (max-width: 768px) {
 
     .menu-card {
