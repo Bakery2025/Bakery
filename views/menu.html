@@ -120,7 +120,7 @@ function renderMenu() {
             .filter((item) => item.category === category)
             .forEach((item) => {
                 html += `
-                <div class="menu-card" data-name="${item.name}" data-price="${item.price}">
+                <div class="menu-card" data-name="${item.name}" loading="lazy" data-price="${item.price}">
                     <img src="${item.image}" alt="${item.name}">
                     <h3>${item.name}</h3>
                     <p class="description">${item.description}</p>
